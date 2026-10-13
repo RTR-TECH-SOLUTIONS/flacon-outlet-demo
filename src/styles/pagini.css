@@ -1,0 +1,2130 @@
+/* Secțiuni specifice unei pagini: acasă, catalog, produs, finalizare. */
+
+/* ── Acasă: caruselul de campanii ────────────────────────────────── */
+.campanii {
+  position: relative;
+  margin-top: 1.25rem !important;
+}
+.campanii-banda {
+  display: flex;
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  scrollbar-width: none;
+  border-radius: var(--raza);
+}
+.campanii-banda::-webkit-scrollbar {
+  display: none;
+}
+.campanie {
+  position: relative;
+  flex: 0 0 100%;
+  display: flex;
+  align-items: center;
+  height: clamp(23rem, 33vw, 29rem);
+  overflow: hidden;
+  scroll-snap-align: start;
+  color: #fff;
+}
+.campanie-foto {
+  background: #3d0a16;
+}
+.campanie-foto img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: right center;
+}
+/* umbrește doar partea stângă, unde stă titlul */
+.campanie-foto::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(90deg, rgb(38 4 12 / 0.7) 0%, rgb(38 4 12 / 0.25) 42%, transparent 60%);
+}
+.campanie-testere {
+  background: radial-gradient(circle at 72% 62%, #45413c 0%, #151413 62%);
+}
+.campanie-arabesc {
+  background: radial-gradient(circle at 72% 60%, #b9812f 0%, #5c3812 48%, #2e1b08 100%);
+}
+.campanie-text {
+  position: relative;
+  z-index: 2;
+  width: min(27rem, 37%);
+  margin-left: clamp(1.5rem, 5.5vw, 5rem);
+}
+.campanie-sus {
+  font-weight: 800;
+}
+.campanie-text h1,
+.campanie-text h2 {
+  margin-top: 0.6rem;
+  font-size: clamp(1.75rem, 3.2vw, 2.75rem);
+  letter-spacing: -0.035em;
+  line-height: 1.08;
+}
+.campanie-text h1 + p,
+.campanie-text h2 + p {
+  margin-top: 0.9rem;
+  font-size: 1.0625rem;
+  color: rgb(255 255 255 / 0.88);
+}
+.campanie-text .buton {
+  margin-top: 1.5rem;
+}
+.campanie-produse {
+  position: absolute;
+  top: 12%;
+  right: 6%;
+  bottom: 12%;
+  left: 47%;
+  display: grid;
+  grid-auto-flow: column;
+  grid-auto-columns: minmax(0, 1fr);
+  align-items: end;
+  gap: clamp(0.5rem, 1.4vw, 1.25rem);
+}
+.campanie-produse img {
+  width: 100%;
+  height: 76%;
+  object-fit: contain;
+  object-position: bottom;
+  filter: drop-shadow(0 22px 16px rgb(0 0 0 / 0.5));
+}
+.campanie-produse img:nth-child(2n) {
+  height: 90%;
+}
+.campanie-produse img:nth-child(3) {
+  height: 100%;
+}
+.campanie-procent {
+  position: absolute;
+  top: 7%;
+  left: 43%;
+  z-index: 2;
+  padding: 0.25rem 0.7rem 0.3rem 1.3rem;
+  background: var(--rosu);
+  font-size: clamp(1.4rem, 2.6vw, 2.2rem);
+  font-weight: 800;
+  letter-spacing: -0.03em;
+  clip-path: polygon(0.9rem 0, 100% 0, 100% 100%, 0.9rem 100%, 0 50%);
+  transform: rotate(-5deg);
+}
+.campanii-control {
+  position: absolute;
+  inset: 0 var(--margine);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  pointer-events: none;
+}
+.campanii-control > * {
+  pointer-events: auto;
+}
+.campanii-sageata {
+  display: grid;
+  place-items: center;
+  width: 2.6rem;
+  height: 2.6rem;
+  margin-inline: 0.6rem;
+  border-radius: 50%;
+  background: rgb(255 255 255 / 0.92);
+  color: var(--cerneala);
+}
+.campanii-sageata:hover {
+  background: #fff;
+}
+.campanii-puncte {
+  align-self: flex-end;
+  display: flex;
+  gap: 0.4rem;
+  margin-bottom: 1rem;
+}
+.campanii-puncte button {
+  width: 2rem;
+  height: 0.9rem;
+  background: linear-gradient(rgb(255 255 255 / 0.45), rgb(255 255 255 / 0.45)) center / 100% 3px no-repeat;
+}
+.campanii-puncte button[aria-current] {
+  background-image: linear-gradient(#fff, #fff);
+}
+@media (max-width: 859px) {
+  .campanie {
+    flex-direction: column;
+    align-items: flex-start;
+    height: 33rem;
+  }
+  .campanie-text {
+    width: auto;
+    margin: 1.75rem 1.25rem 0;
+  }
+  .campanie-text h1 + p,
+  .campanie-text h2 + p {
+    font-size: 0.9375rem;
+  }
+  .campanie-text .buton {
+    margin-top: 1.1rem;
+  }
+  .campanie-foto img {
+    object-position: 82% bottom;
+    height: 62%;
+    top: auto;
+  }
+  .campanie-foto::after {
+    background: linear-gradient(180deg, #3d0a16 38%, rgb(61 10 22 / 0) 62%);
+  }
+  .campanie-produse {
+    top: auto;
+    right: 0;
+    left: 0;
+    bottom: 2.75rem;
+    height: 11.5rem;
+    padding-inline: 1.25rem;
+  }
+  .campanie-testere {
+    background: radial-gradient(circle at 50% 78%, #45413c 0%, #151413 60%);
+  }
+  .campanie-arabesc {
+    background: radial-gradient(circle at 50% 78%, #b9812f 0%, #5c3812 45%, #2e1b08 100%);
+  }
+  .campanie-procent {
+    top: auto;
+    bottom: 14.5rem;
+    left: auto;
+    right: 1.25rem;
+  }
+  .campanii-sageata {
+    display: none;
+  }
+  .campanii-control {
+    justify-content: center;
+  }
+}
+
+/* ── Acasă: reclame de brand ─────────────────────────────────────── */
+.reclame {
+  display: grid;
+  gap: 1rem;
+}
+.reclame-trei {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+.reclame-doi {
+  grid-template-columns: 1.35fr 1fr;
+}
+.reclama {
+  position: relative;
+  display: flex;
+  align-items: flex-end;
+  min-height: 17.5rem;
+  padding: 1.5rem;
+  border-radius: var(--raza);
+  overflow: hidden;
+  color: #fff;
+}
+.reclama img {
+  position: absolute;
+  top: 50%;
+  right: 7%;
+  width: auto;
+  max-width: 44%;
+  height: 76%;
+  object-fit: contain;
+  transform: translateY(-50%);
+  filter: drop-shadow(0 20px 16px rgb(0 0 0 / 0.45));
+  transition: transform 420ms var(--usor);
+}
+.reclama:hover img {
+  transform: translateY(-50%) scale(1.05);
+}
+.reclama-text {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  max-width: 54%;
+}
+.reclama-brand {
+  font-size: clamp(1.15rem, 1.8vw, 1.5rem);
+  font-weight: 800;
+  letter-spacing: 0.1em;
+  line-height: 1.2;
+  text-transform: uppercase;
+}
+.reclama-nume {
+  margin-top: 0.4rem;
+  line-height: 1.4;
+  opacity: 0.9;
+}
+.reclama-pret {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.3rem 0.6rem;
+  margin-top: 0.9rem;
+}
+.reclama-pret .motiv {
+  border-color: currentColor;
+  background: none;
+  color: inherit;
+}
+.reclama-pret strong {
+  font-size: 1.7rem;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  line-height: 1;
+}
+.reclama-pret s {
+  opacity: 0.7;
+}
+.reclama-eros {
+  background: radial-gradient(circle at 76% 50%, #2494a0 0%, #0b4a52 68%);
+}
+.reclama-million {
+  background: radial-gradient(circle at 74% 50%, #55420f 0%, #0e0c08 70%);
+}
+.reclama-million .reclama-brand {
+  color: #ecc978;
+}
+.reclama-million img {
+  max-width: 50%;
+  right: 3%;
+}
+.reclama-dermato {
+  background: #d9e8f3;
+  color: var(--cerneala);
+}
+.reclama-dermato img {
+  filter: drop-shadow(0 16px 14px rgb(40 70 100 / 0.3));
+}
+.reclama-par {
+  background: radial-gradient(circle at 80% 50%, #8a5620 0%, #2b190b 70%);
+}
+.reclama-par img {
+  right: 6%;
+  max-width: 22%;
+}
+.reclama-par img.reclama-al-doilea {
+  right: 27%;
+  height: 58%;
+  top: 58%;
+}
+.reclama-opium {
+  background: radial-gradient(circle at 74% 50%, #5a1c3a 0%, #130a10 70%);
+}
+.reclama-opium .reclama-brand {
+  color: #f4bccb;
+}
+@media (max-width: 1099px) {
+  .reclame-trei {
+    grid-template-columns: 1fr 1fr;
+  }
+  .reclame-trei .reclama:last-child {
+    grid-column: 1 / -1;
+  }
+}
+@media (max-width: 699px) {
+  .reclame-trei,
+  .reclame-doi {
+    grid-template-columns: 1fr;
+  }
+  .reclama {
+    min-height: 13.5rem;
+    padding: 1.25rem;
+  }
+  .reclama-pret strong {
+    font-size: 1.4rem;
+  }
+  .reclama-par img.reclama-al-doilea {
+    display: none;
+  }
+}
+
+/* ── Acasă: branduri ─────────────────────────────────────────────── */
+main > .branduri {
+  margin-top: 1.5rem;
+}
+main > .servicii {
+  margin-top: 1rem;
+}
+.branduri ul {
+  display: flex;
+  gap: 0.5rem;
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+.branduri ul::-webkit-scrollbar {
+  display: none;
+}
+.branduri li {
+  flex: 1 0 9.5rem;
+}
+.branduri a {
+  display: grid;
+  place-items: center;
+  height: 4.75rem;
+  padding: 0 1.25rem;
+  border: 1px solid var(--linie);
+  border-radius: var(--raza);
+}
+.branduri a:hover {
+  border-color: var(--cerneala);
+}
+/* logourile vin în culorile și proporțiile lor: le aducem la aceeași greutate vizuală */
+.branduri img {
+  width: 100%;
+  max-width: 7rem;
+  height: 1.75rem;
+  object-fit: contain;
+  filter: grayscale(1) contrast(1.4);
+}
+.branduri a:hover img {
+  filter: none;
+}
+
+/* ── Acasă: cele șase motive de reducere ─────────────────────────── */
+.motive-intro {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 0.5rem 2.5rem;
+  margin-bottom: 1.5rem;
+}
+.motive-intro p {
+  max-width: 44rem;
+  color: var(--mut);
+}
+.motive-dale {
+  display: grid;
+  grid-template-columns: repeat(6, minmax(0, 1fr));
+  gap: 0.5rem;
+}
+.motive-dale a {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+/* aceeași dală gri ca la cardul de produs, cu procentul mare în colț */
+.motive-foto {
+  position: relative;
+  display: block;
+  aspect-ratio: 1 / 1.08;
+  background: var(--camp);
+  overflow: hidden;
+}
+.motive-foto img {
+  width: 100%;
+  height: 100%;
+  padding: 22% 20% 30%;
+  object-fit: contain;
+  mix-blend-mode: multiply;
+  transition: transform 500ms var(--usor);
+}
+.motive-dale a:hover img {
+  transform: scale(1.07);
+}
+.motive-foto .steag {
+  position: absolute;
+  top: 0.6rem;
+  left: 0.6rem;
+}
+.motive-procent {
+  position: absolute;
+  left: 0.7rem;
+  bottom: 0.5rem;
+  color: var(--rosu);
+  font-size: clamp(1.6rem, 2.3vw, 2.4rem);
+  font-weight: 800;
+  letter-spacing: -0.04em;
+  line-height: 1;
+}
+.motive-procent small {
+  display: block;
+  margin-bottom: 0.15rem;
+  color: var(--cerneala);
+  font-size: 0.75rem;
+  font-weight: 500;
+  letter-spacing: 0;
+}
+.motive-dale strong {
+  margin-top: 0.8rem;
+  padding-inline: 0.25rem;
+  font-weight: 600;
+  line-height: 1.35;
+}
+.motive-text {
+  margin-top: 0.3rem;
+  padding-inline: 0.25rem;
+  color: var(--mut);
+  font-size: 0.8125rem;
+  line-height: 1.5;
+}
+.motive-dale em {
+  margin-top: auto;
+  padding: 0.7rem 0.25rem 0;
+  font-size: 0.8125rem;
+  font-style: normal;
+  font-weight: 600;
+  text-decoration: underline;
+  text-underline-offset: 0.3em;
+}
+.motive-dale a:hover em {
+  color: var(--rosu);
+}
+@media (max-width: 1199px) {
+  .motive-dale {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 1.75rem 0.5rem;
+  }
+}
+@media (max-width: 559px) {
+  .motive-dale {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+  .motive-text {
+    display: none;
+  }
+}
+
+/* ── Acasă: categorii ────────────────────────────────────────────── */
+.categorii-sectiune h2 {
+  margin-bottom: 1.25rem;
+}
+.categorii-grila {
+  display: grid;
+  grid-template-columns: 1.55fr 1fr 1fr 1fr;
+  grid-auto-rows: 11.5rem;
+  gap: 1rem;
+}
+.categorie {
+  position: relative;
+  display: flex;
+  align-items: flex-end;
+  padding: 1.1rem 1.25rem;
+  border-radius: var(--raza);
+  background: var(--camp);
+  overflow: hidden;
+}
+.categorie:hover {
+  background: var(--camp-inchis);
+}
+.categorie img {
+  position: absolute;
+  right: -4%;
+  top: 50%;
+  width: auto;
+  height: 96%;
+  transform: translateY(-50%);
+  mix-blend-mode: multiply;
+  transition: transform 420ms var(--usor);
+}
+.categorie:hover img {
+  transform: translateY(-50%) scale(1.05);
+}
+.categorie-text {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  max-width: 58%;
+  line-height: 1.35;
+}
+.categorie-text strong {
+  font-size: 1.15rem;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+}
+.categorie-text span {
+  color: #3b3936;
+  font-size: 0.8125rem;
+}
+.categorie-text small {
+  margin-top: 0.5rem;
+  font-size: 0.8125rem;
+  font-weight: 700;
+  text-decoration: underline;
+  text-underline-offset: 0.25em;
+}
+.categorie:first-child {
+  grid-row: span 2;
+  align-items: flex-start;
+}
+.categorie:first-child img {
+  top: auto;
+  right: 50%;
+  bottom: -2%;
+  height: 74%;
+  transform: translateX(50%);
+}
+.categorie:first-child:hover img {
+  transform: translateX(50%) scale(1.05);
+}
+.categorie:first-child .categorie-text {
+  max-width: none;
+}
+.categorie:first-child strong {
+  font-size: 1.6rem;
+}
+.categorie:last-child {
+  grid-column: span 2;
+}
+@media (max-width: 1099px) {
+  .categorii-grila {
+    grid-template-columns: 1fr 1fr;
+    grid-auto-rows: 9.5rem;
+  }
+  .categorie:first-child {
+    grid-row: auto;
+    grid-column: 1 / -1;
+    align-items: flex-end;
+  }
+  .categorie:first-child img {
+    top: 50%;
+    right: 2%;
+    bottom: auto;
+    height: 96%;
+    transform: translateY(-50%);
+  }
+  .categorie:first-child:hover img {
+    transform: translateY(-50%) scale(1.05);
+  }
+  .categorie:last-child {
+    grid-column: auto;
+  }
+}
+@media (max-width: 699px) {
+  .categorii-grila {
+    gap: 0.75rem;
+  }
+  .categorie {
+    padding: 0.85rem;
+  }
+  .categorie-text {
+    max-width: 62%;
+  }
+  .categorie-text span {
+    display: none;
+  }
+  .categorie-text strong {
+    font-size: 1rem;
+  }
+  .categorie img {
+    right: -14%;
+  }
+}
+
+/* ── Acasă: autenticitate + fișa de depozit ──────────────────────── */
+.autenticitate {
+  padding-block: var(--ritm);
+  background: var(--camp);
+}
+.autenticitate-rand {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1.2fr);
+  gap: 2rem clamp(2rem, 6vw, 7rem);
+  align-items: start;
+}
+.autenticitate-text > p {
+  max-width: 36rem;
+  margin-top: 0.85rem;
+  color: #3b3936;
+}
+.pasi {
+  margin-top: 0;
+  border-top: 1px solid var(--linie-tare);
+  counter-reset: pas;
+}
+.pasi li {
+  position: relative;
+  padding: 0.95rem 0 0.95rem 2.5rem;
+  border-bottom: 1px solid var(--linie-tare);
+  counter-increment: pas;
+}
+.pasi li::before {
+  content: counter(pas);
+  position: absolute;
+  left: 0;
+  top: 0.9rem;
+  font-size: 1.1rem;
+  font-weight: 800;
+}
+.pasi strong {
+  display: block;
+  font-weight: 800;
+}
+@media (max-width: 859px) {
+  .autenticitate-rand {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* ── Acasă: servicii, păreri, abonare ────────────────────────────── */
+.servicii ul {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  border-radius: var(--raza);
+  background: var(--camp);
+}
+.servicii li {
+  display: flex;
+  align-items: center;
+  gap: 0.9rem;
+  padding: 1rem 1.25rem;
+}
+.servicii li + li {
+  border-left: 1px solid var(--linie-tare);
+}
+.servicii svg {
+  flex-shrink: 0;
+  width: 2rem;
+  height: 2rem;
+  fill: none;
+  stroke: var(--cerneala);
+  stroke-width: 1.5;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+.servicii strong {
+  display: block;
+  font-weight: 800;
+  line-height: 1.3;
+}
+.servicii span {
+  color: var(--mut);
+  font-size: 0.8125rem;
+  line-height: 1.35;
+}
+@media (max-width: 1099px) {
+  .servicii ul {
+    grid-template-columns: 1fr 1fr;
+  }
+  .servicii li:nth-child(3) {
+    border-left: 0;
+  }
+  .servicii li:nth-child(n + 3) {
+    border-top: 1px solid var(--linie-tare);
+  }
+}
+@media (max-width: 559px) {
+  .servicii li {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.4rem;
+    padding: 0.85rem 0.9rem;
+  }
+  .servicii svg {
+    width: 1.6rem;
+    height: 1.6rem;
+  }
+}
+
+.pareri ul {
+  display: grid;
+  grid-template-columns: 1.25fr 1fr 1fr;
+  gap: 2.5rem;
+  margin-top: 1.5rem;
+}
+.pareri blockquote {
+  font-size: 1.0625rem;
+  line-height: 1.5;
+}
+.pareri li:first-child blockquote {
+  font-size: 1.3rem;
+  font-weight: 600;
+  letter-spacing: -0.015em;
+  line-height: 1.4;
+}
+.pareri li p {
+  margin-top: 0.9rem;
+  font-size: 0.8125rem;
+  line-height: 1.45;
+}
+.pareri li p span {
+  display: block;
+  color: var(--mut);
+}
+@media (max-width: 859px) {
+  .pareri ul {
+    grid-template-columns: 1fr;
+    gap: 1.75rem;
+  }
+}
+
+.abonare {
+  padding-block: clamp(2.25rem, 5vw, 3.5rem);
+  background: var(--rosu);
+  color: #fff;
+}
+/* subsolul vine lipit de banda roșie */
+.abonare + * {
+  margin-top: 0;
+}
+main:has(> .abonare:last-child) + .subsol {
+  margin-top: 0;
+}
+.abonare-rand {
+  display: grid;
+  grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr);
+  gap: 1.5rem 3rem;
+  align-items: center;
+}
+.abonare p {
+  max-width: 34rem;
+  margin-top: 0.5rem;
+  color: #ffe3e3;
+}
+.abonare-formular {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.6rem;
+}
+.abonare-formular input {
+  flex: 1;
+  min-width: 12rem;
+  height: 2.9rem;
+  padding-inline: 1rem;
+  border-radius: var(--raza);
+  background: #fff;
+  color: var(--cerneala);
+}
+.abonare-formular input:focus-visible,
+.abonare .buton:focus-visible {
+  outline-color: #fff;
+}
+.abonare-mesaj {
+  flex-basis: 100%;
+  margin: 0 !important;
+  color: #fff !important;
+  font-weight: 700;
+}
+@media (max-width: 859px) {
+  .abonare-rand {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* ── Catalog ─────────────────────────────────────────────────────── */
+.catalog {
+  margin-top: 1.25rem;
+}
+/* bannerul categoriei: culoare proprie + produsele decupate, ca o vitrină */
+.cat-antet {
+  position: relative;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1.05fr);
+  align-items: center;
+  gap: 2rem;
+  min-height: 17rem;
+  padding: 2rem clamp(1.25rem, 4vw, 4rem);
+  overflow: hidden;
+  color: #fff;
+}
+.cat-antet-text {
+  position: relative;
+  z-index: 1;
+  max-width: 36rem;
+}
+.cat-antet .firimituri {
+  color: inherit;
+  opacity: 0.8;
+}
+.cat-antet .firimituri a:hover {
+  color: inherit;
+}
+.cat-antet .firimituri a::after {
+  color: inherit;
+  opacity: 0.6;
+}
+.cat-antet h1 {
+  margin-top: 0.9rem;
+  font-size: clamp(2rem, 4vw, 3.4rem);
+  letter-spacing: -0.04em;
+  line-height: 1.02;
+}
+.cat-antet h1 + p {
+  margin-top: 0.8rem;
+  font-size: 1.0625rem;
+  opacity: 0.92;
+}
+.cat-antet-numar {
+  margin-top: 1.1rem;
+  font-size: 0.875rem;
+  font-weight: 700;
+}
+.cat-antet-poze {
+  display: grid;
+  grid-auto-flow: column;
+  grid-auto-columns: minmax(0, 1fr);
+  /* rând cu înălțime fixă: altfel procentele pozelor nu au la ce se raporta */
+  grid-template-rows: 100%;
+  align-items: end;
+  gap: clamp(0.5rem, 1.5vw, 1.5rem);
+  height: 13rem;
+  max-width: 44rem;
+  justify-self: end;
+  width: 100%;
+}
+.cat-antet-poze img {
+  min-width: 0;
+  width: 100%;
+  height: 78%;
+  object-fit: contain;
+  object-position: bottom;
+  filter: drop-shadow(0 18px 14px rgb(0 0 0 / 0.4));
+}
+.cat-antet-poze img:nth-child(2n) {
+  height: 92%;
+}
+.cat-antet-poze img:nth-child(3) {
+  height: 100%;
+}
+.cat-inchis {
+  background: radial-gradient(circle at 74% 60%, #4a4640 0%, #151413 62%);
+}
+.cat-auriu {
+  background: radial-gradient(circle at 74% 60%, #b9812f 0%, #5c3812 48%, #2e1b08 100%);
+}
+.cat-maro {
+  background: radial-gradient(circle at 74% 60%, #8a5620 0%, #2b190b 70%);
+}
+.cat-visiniu {
+  background: radial-gradient(circle at 74% 60%, #8c1f35 0%, #3d0a16 70%);
+}
+.cat-roz {
+  background: #efd3d1;
+  color: var(--cerneala);
+}
+.cat-bleu {
+  background: #d9e8f3;
+  color: var(--cerneala);
+}
+.cat-nisip {
+  background: #e9dfcd;
+  color: var(--cerneala);
+}
+.cat-roz img,
+.cat-bleu img,
+.cat-nisip img {
+  filter: drop-shadow(0 14px 12px rgb(60 50 40 / 0.28));
+}
+.cat-simplu {
+  grid-template-columns: 1fr;
+  min-height: 0;
+  padding-block: 2rem;
+  background: var(--camp);
+  color: var(--cerneala);
+}
+.cat-foto {
+  grid-template-columns: 1fr;
+  background: #3d0a16;
+}
+.cat-antet-foto {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: right 62%;
+}
+.cat-foto::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(90deg, rgb(38 4 12 / 0.75) 0%, rgb(38 4 12 / 0.3) 45%, transparent 62%);
+}
+
+.cat-scurtaturi {
+  display: flex;
+  gap: 0.5rem;
+  margin-top: 1rem;
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+.cat-scurtaturi::-webkit-scrollbar {
+  display: none;
+}
+.scurtatura {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 0.5rem;
+  padding: 0.6rem 1.1rem;
+  border: 1px solid var(--linie-tare);
+  font-weight: 600;
+  white-space: nowrap;
+}
+.scurtatura small {
+  color: var(--mut);
+  font-size: 0.75rem;
+  font-weight: 500;
+}
+.scurtatura:hover {
+  border-color: var(--cerneala);
+}
+.scurtatura-activa {
+  border-color: var(--cerneala);
+  background: var(--cerneala);
+  color: #fff;
+}
+.scurtatura-activa small {
+  color: #c9c6bf;
+}
+
+.catalog-corp {
+  display: grid;
+  grid-template-columns: 15.5rem minmax(0, 1fr);
+  gap: clamp(1.5rem, 3vw, 3rem);
+  align-items: start;
+  margin-top: 1.75rem;
+}
+.filtre {
+  position: sticky;
+  top: 8.5rem;
+  max-height: calc(100vh - 9.5rem);
+  overflow-y: auto;
+  padding-right: 0.5rem;
+  scrollbar-width: thin;
+  border-top: 1px solid var(--cerneala);
+}
+.filtre details {
+  padding-bottom: 0.9rem;
+  border-bottom: 1px solid var(--linie);
+}
+.filtre summary {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-block: 0.95rem 0.6rem;
+  font-size: 0.8125rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  cursor: pointer;
+  list-style: none;
+}
+.filtre summary::-webkit-details-marker {
+  display: none;
+}
+.filtre summary::after {
+  content: '';
+  width: 0.45rem;
+  height: 0.45rem;
+  margin-right: 0.2rem;
+  border-right: 1.5px solid currentColor;
+  border-bottom: 1.5px solid currentColor;
+  transform: rotate(-135deg);
+  transition: transform 200ms var(--usor);
+}
+.filtre details:not([open]) summary::after {
+  transform: rotate(45deg);
+}
+.optiune {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  padding-block: 0.26rem;
+  font-size: 0.875rem;
+  cursor: pointer;
+}
+.optiune input {
+  width: 1rem;
+  height: 1rem;
+  accent-color: var(--cerneala);
+  flex-shrink: 0;
+}
+.optiune span {
+  flex: 1;
+}
+.optiune:hover span {
+  text-decoration: underline;
+  text-underline-offset: 0.2em;
+}
+.optiune small {
+  color: var(--mut);
+  font-size: 0.75rem;
+}
+.optiune-goala {
+  color: var(--linie-tare);
+  cursor: default;
+}
+.optiune-goala:hover span {
+  text-decoration: none;
+}
+.filtre-lista {
+  max-height: 14rem;
+  overflow-y: auto;
+  padding-right: 0.5rem;
+  scrollbar-width: thin;
+}
+.filtre-sterge {
+  font-size: 0.8125rem;
+  font-weight: 600;
+  text-decoration: underline;
+  text-underline-offset: 0.25em;
+}
+.filtre-sterge:hover {
+  color: var(--rosu);
+}
+
+.catalog-bara {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  min-height: 2.9rem;
+  margin-bottom: 1rem;
+}
+.alese {
+  display: flex;
+  flex: 1;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.4rem 0.5rem;
+}
+.ales {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.3rem 0.6rem 0.32rem 0.7rem;
+  background: var(--camp);
+  font-size: 0.8125rem;
+}
+.ales:hover {
+  background: var(--cerneala);
+  color: #fff;
+}
+.sortare {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  margin-left: auto;
+  font-size: 0.875rem;
+}
+.sortare span {
+  color: var(--mut);
+}
+.sortare select {
+  height: 2.75rem;
+  padding: 0 2.2rem 0 0.9rem;
+  border: 1px solid var(--linie-tare);
+  background: #fff
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' fill='none' stroke='%23151413' stroke-width='1.6'/%3E%3C/svg%3E")
+    no-repeat right 0.85rem center / 0.7rem;
+  font-weight: 600;
+  appearance: none;
+}
+.grila {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 2.25rem 0.5rem;
+}
+/* reclama ocupă două celule din grilă, la înălțimea pozei unui card */
+.grila-reclama {
+  position: relative;
+  grid-column: span 2;
+  display: flex;
+  align-items: flex-end;
+  align-self: start;
+  aspect-ratio: 8 / 4.62;
+  padding: clamp(1rem, 2vw, 1.75rem);
+  overflow: hidden;
+  color: #fff;
+}
+.grila-reclama-testere {
+  background: radial-gradient(circle at 72% 50%, #4a4640 0%, #151413 66%);
+}
+.grila-reclama-arabesc {
+  background: radial-gradient(circle at 72% 50%, #b9812f 0%, #5c3812 50%, #2e1b08 100%);
+}
+.grila-reclama span {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  max-width: 52%;
+  line-height: 1.2;
+}
+.grila-reclama small {
+  font-size: 0.8125rem;
+  font-weight: 600;
+}
+.grila-reclama strong {
+  margin-top: 0.35rem;
+  font-size: clamp(1.2rem, 1.9vw, 1.8rem);
+  font-weight: 800;
+  letter-spacing: -0.03em;
+  line-height: 1.1;
+}
+.grila-reclama em {
+  margin-top: 0.8rem;
+  font-size: 0.8125rem;
+  font-style: normal;
+  font-weight: 600;
+  text-decoration: underline;
+  text-underline-offset: 0.3em;
+}
+.grila-reclama img {
+  position: absolute;
+  right: 7%;
+  bottom: 9%;
+  width: auto;
+  height: 80%;
+  filter: drop-shadow(0 18px 14px rgb(0 0 0 / 0.5));
+  transition: transform 500ms var(--usor);
+}
+.grila-reclama img + img {
+  right: 27%;
+  height: 62%;
+}
+.grila-reclama:hover img {
+  transform: translateY(-4px);
+}
+.catalog-mai-mult {
+  display: grid;
+  justify-items: center;
+  gap: 0.75rem;
+  margin-top: 3rem;
+  color: var(--mut);
+  font-size: 0.875rem;
+}
+.catalog-mai-mult .prag-bara {
+  width: 14rem;
+  margin: 0;
+  height: 2px;
+}
+.catalog-mai-mult .buton {
+  margin-top: 0.5rem;
+  min-width: 14rem;
+  border-color: var(--cerneala);
+  border-radius: 0;
+  color: var(--cerneala);
+}
+.catalog-mai-mult .buton:hover {
+  background: var(--cerneala);
+  color: #fff;
+}
+.catalog-gol {
+  display: grid;
+  justify-items: start;
+  gap: 1rem;
+  padding-block: 3rem;
+  color: var(--mut);
+}
+.cat-ghid {
+  max-width: 46rem;
+  margin-top: var(--ritm);
+  padding-top: 1.75rem;
+  border-top: 1px solid var(--linie);
+}
+.cat-ghid h2 {
+  font-size: 1.15rem;
+}
+.cat-ghid p {
+  margin-top: 0.6rem;
+  color: #3b3936;
+}
+@media (min-width: 1500px) {
+  .grila {
+    grid-template-columns: repeat(5, minmax(0, 1fr));
+  }
+}
+@media (max-width: 1199px) {
+  .grila {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+@media (max-width: 859px) {
+  .cat-antet {
+    grid-template-columns: 1fr;
+    gap: 1.25rem;
+    min-height: 0;
+    padding: 1.5rem 1.25rem 1.25rem;
+    margin-inline: calc(var(--margine) * -1);
+  }
+  .cat-antet-poze {
+    height: 8.5rem;
+    justify-self: center;
+  }
+  .cat-foto {
+    min-height: 15rem;
+  }
+  .catalog-corp {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+    margin-top: 1.25rem;
+  }
+  .filtre {
+    position: static;
+    display: none;
+    max-height: none;
+    padding: 0 1rem;
+    border: 1px solid var(--linie-tare);
+  }
+  .filtre-deschise {
+    display: block;
+  }
+  .catalog-bara {
+    flex-wrap: wrap;
+  }
+  .alese {
+    order: 3;
+    flex-basis: 100%;
+  }
+  .sortare span {
+    display: none;
+  }
+  .grila {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 1.75rem 0.5rem;
+  }
+  .grila-reclama {
+    aspect-ratio: 2 / 1.1;
+  }
+}
+
+/* ── Produs ──────────────────────────────────────────────────────── */
+.produs-banda-brand {
+  display: grid;
+  place-items: center;
+  height: 3.5rem;
+  border-bottom: 1px solid var(--linie);
+}
+.produs-banda-brand img {
+  width: auto;
+  max-width: 11rem;
+  height: 1.4rem;
+  object-fit: contain;
+}
+.produs {
+  display: grid;
+  grid-template-columns: minmax(0, 1.3fr) minmax(0, 1fr);
+  gap: clamp(1.5rem, 4vw, 5rem);
+  align-items: start;
+}
+.produs-foto {
+  position: sticky;
+  top: 8.5rem;
+  height: min(46rem, calc(100vh - 10rem));
+  min-height: 26rem;
+  background: var(--camp);
+}
+.produs-foto img {
+  width: 100%;
+  height: 100%;
+  padding: 9% 14%;
+  object-fit: contain;
+  mix-blend-mode: multiply;
+}
+.produs-foto .card-steaguri {
+  top: 1rem;
+  left: 1rem;
+}
+.produs-foto .steag {
+  padding: 0.2rem 0.5rem 0.22rem;
+  font-size: 0.8125rem;
+}
+.produs-foto .card-inima {
+  top: 0.6rem;
+  right: 0.6rem;
+}
+/* coloana de text: un singur flux, totul aliniat la aceeași margine stângă */
+.produs-info {
+  max-width: 40rem;
+  padding-top: 1.25rem;
+}
+.firimituri {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.2rem 0.45rem;
+  color: var(--mut);
+  font-size: 0.8125rem;
+}
+.firimituri a:hover {
+  color: var(--cerneala);
+  text-decoration: underline;
+}
+.firimituri a::after {
+  content: '/';
+  margin-left: 0.45rem;
+  color: var(--linie-tare);
+}
+.produs-brand {
+  display: inline-block;
+  margin-top: 1.5rem;
+  font-size: 0.875rem;
+  font-weight: 700;
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
+  text-decoration: underline;
+  text-underline-offset: 0.3em;
+}
+.produs-brand:hover {
+  color: var(--rosu);
+}
+.produs-info h1 {
+  margin-top: 0.45rem;
+  font-size: clamp(1.75rem, 2.6vw, 2.4rem);
+  font-weight: 600;
+  letter-spacing: -0.02em;
+  line-height: 1.12;
+}
+.produs-tip {
+  margin-top: 0.4rem;
+  color: var(--mut);
+  font-size: 1rem;
+}
+.produs-nota {
+  display: inline-flex;
+  margin-top: 0.8rem;
+  color: var(--cerneala);
+  font-size: 0.875rem;
+  font-weight: 600;
+}
+.produs-nota-numar {
+  color: var(--mut);
+  font-weight: 400;
+  text-decoration: underline;
+  text-underline-offset: 0.25em;
+}
+.produs-pret {
+  margin-top: 1.5rem;
+  padding-top: 1.4rem;
+  border-top: 1px solid var(--linie);
+}
+.produs-pret-rand {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.3rem 0.8rem;
+}
+.produs-pret .pret-outlet {
+  font-size: 2.25rem;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  line-height: 1;
+}
+.produs-pret s {
+  color: var(--mut);
+  font-size: 1.125rem;
+}
+.produs-pret .steag {
+  padding: 0.2rem 0.5rem;
+  font-size: 0.875rem;
+}
+.produs-pret-mic {
+  margin-top: 0.6rem;
+  color: var(--mut);
+  font-size: 0.8125rem;
+}
+.produs-motiv {
+  margin-top: 1.4rem;
+  padding: 1rem 1.1rem 1.05rem;
+  background: var(--camp);
+  font-size: 0.875rem;
+  line-height: 1.55;
+}
+.produs-motiv-cap {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  margin-bottom: 0.45rem;
+  font-weight: 700;
+}
+.produs-motiv-economie {
+  margin-top: 0.45rem;
+  color: var(--rosu-inchis);
+  font-weight: 700;
+}
+.produs-cumpara {
+  display: flex;
+  gap: 0.5rem;
+  margin-top: 1.25rem;
+}
+.produs-cumpara .cantitate {
+  border-radius: 0;
+  border-color: var(--cerneala);
+}
+.produs-cumpara .cantitate button {
+  height: 3.25rem;
+}
+.produs-adauga {
+  flex: 1;
+  min-height: 3.4rem;
+  background: var(--cerneala);
+  color: #fff;
+  font-size: 0.875rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+.produs-adauga:hover {
+  background: var(--rosu);
+}
+.produs-garantii {
+  margin-top: 1.25rem;
+}
+.produs-garantii li {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.85rem;
+  padding-block: 0.7rem;
+  font-size: 0.875rem;
+  line-height: 1.45;
+  color: #3b3936;
+}
+.produs-garantii li + li {
+  border-top: 1px solid var(--linie);
+}
+.produs-garantii svg {
+  flex-shrink: 0;
+  width: 1.5rem;
+  height: 1.5rem;
+  margin-top: 0.1rem;
+  fill: none;
+  stroke: var(--cerneala);
+  stroke-width: 1.6;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+.produs-garantii strong {
+  display: block;
+  color: var(--cerneala);
+  font-weight: 700;
+}
+.produs-garantii strong.stoc-putin {
+  color: var(--rosu-inchis);
+}
+.produs-pliante {
+  margin-top: 0.75rem;
+  border-top: 1px solid var(--linie);
+}
+.produs-pliante details {
+  border-bottom: 1px solid var(--linie);
+}
+.produs-pliante summary {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-block: 1rem;
+  font-size: 0.875rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  cursor: pointer;
+  list-style: none;
+}
+.produs-pliante summary::-webkit-details-marker {
+  display: none;
+}
+.produs-pliante summary::after {
+  content: '';
+  width: 0.55rem;
+  height: 0.55rem;
+  margin-right: 0.3rem;
+  border-right: 1.5px solid currentColor;
+  border-bottom: 1.5px solid currentColor;
+  transform: rotate(-45deg);
+  transition: transform 200ms var(--usor);
+}
+.produs-pliante details[open] summary::after {
+  transform: rotate(45deg);
+}
+.produs-pliante details > :not(summary) {
+  font-size: 0.875rem;
+  color: #3b3936;
+}
+.produs-pliante details > p {
+  max-width: 34rem;
+  margin-bottom: 0.75rem;
+}
+.produs-pliante details > :last-child {
+  margin-bottom: 1.25rem;
+}
+.produs-pliante dl div {
+  display: grid;
+  grid-template-columns: 8.5rem minmax(0, 1fr);
+  gap: 1rem;
+  padding-block: 0.35rem;
+}
+.produs-pliante dt {
+  color: var(--mut);
+}
+.produs-pareri li + li {
+  margin-top: 1rem;
+  padding-top: 1rem;
+  border-top: 1px solid var(--linie);
+}
+.produs-pareri strong {
+  font-weight: 600;
+}
+.produs-pareri small {
+  display: block;
+  margin-top: 0.3rem;
+  color: var(--mut);
+  font-size: 0.75rem;
+}
+@media (max-width: 859px) {
+  .produs {
+    grid-template-columns: 1fr;
+    gap: 0;
+  }
+  .produs-foto {
+    position: relative;
+    top: 0;
+    height: auto;
+    min-height: 0;
+    margin-inline: calc(var(--margine) * -1);
+    aspect-ratio: 1 / 0.9;
+  }
+  .produs-info {
+    max-width: none;
+  }
+}
+
+/* ── Finalizare ──────────────────────────────────────────────────── */
+.finalizare {
+  display: grid;
+  grid-template-columns: minmax(0, 1.5fr) minmax(0, 1fr);
+  gap: clamp(1.5rem, 4vw, 4rem);
+  align-items: start;
+  margin-top: 2rem;
+}
+.finalizare-gol {
+  min-height: 60vh;
+}
+.finalizare h1 {
+  font-size: clamp(1.6rem, 3vw, 2.25rem);
+}
+.finalizare fieldset {
+  margin-top: 1.75rem;
+  padding-top: 1.1rem;
+  border-top: 2px solid var(--cerneala);
+}
+.finalizare legend {
+  float: left;
+  width: 100%;
+  margin-bottom: 1rem;
+  font-size: 1.15rem;
+  font-weight: 800;
+}
+.campuri {
+  clear: both;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.9rem;
+}
+.campuri label span {
+  display: block;
+  margin-bottom: 0.3rem;
+  font-size: 0.875rem;
+  font-weight: 700;
+}
+.campuri input {
+  width: 100%;
+  height: 2.9rem;
+  padding-inline: 0.85rem;
+  border: 1.5px solid var(--linie-tare);
+  border-radius: var(--raza);
+  background: #fff;
+}
+.campuri input:focus {
+  border-color: var(--cerneala);
+  outline: none;
+  box-shadow: inset 0 0 0 1px var(--cerneala);
+}
+.camp-lat {
+  grid-column: 1 / -1;
+}
+.alegeri {
+  clear: both;
+  display: grid;
+  gap: 0.5rem;
+  margin-bottom: 1.1rem;
+}
+.alegere {
+  display: flex;
+  align-items: center;
+  gap: 0.85rem;
+  padding: 0.8rem 1rem;
+  border: 1.5px solid var(--linie-tare);
+  border-radius: var(--raza);
+  cursor: pointer;
+}
+.alegere-activa {
+  border-color: var(--cerneala);
+  box-shadow: inset 0 0 0 1px var(--cerneala);
+}
+.alegere input {
+  width: 1.1rem;
+  height: 1.1rem;
+  accent-color: var(--cerneala);
+}
+.alegere span {
+  flex: 1;
+  line-height: 1.35;
+}
+.alegere strong,
+.alegere small {
+  display: block;
+}
+.alegere small {
+  color: var(--mut);
+  font-size: 0.8125rem;
+}
+.alegere em {
+  font-style: normal;
+  font-weight: 800;
+}
+.sumar {
+  position: sticky;
+  top: 6rem;
+  padding: 1.5rem;
+  background: var(--camp);
+  border-radius: var(--raza);
+}
+.sumar h2 {
+  font-size: 1.15rem;
+}
+.sumar ul {
+  margin-block: 1rem;
+  border-top: 1px solid var(--linie-tare);
+}
+.sumar li {
+  display: grid;
+  grid-template-columns: 3.5rem minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 0.85rem;
+  padding-block: 0.75rem;
+  border-bottom: 1px solid var(--linie-tare);
+  line-height: 1.35;
+}
+.sumar li img {
+  width: 3.5rem;
+  height: 3.5rem;
+  object-fit: contain;
+  mix-blend-mode: multiply;
+}
+.sumar li small {
+  display: block;
+  color: var(--mut);
+  font-size: 0.78rem;
+}
+.sumar li em {
+  font-style: normal;
+  font-weight: 800;
+  white-space: nowrap;
+}
+.confirmare {
+  display: grid;
+  justify-items: start;
+  gap: 1rem;
+  max-width: 38rem;
+  padding-block: clamp(3rem, 10vw, 7rem);
+}
+.confirmare h1 {
+  font-size: clamp(1.75rem, 3.5vw, 2.5rem);
+}
+.confirmare-nota {
+  color: var(--mut);
+  font-size: 0.875rem;
+}
+@media (max-width: 859px) {
+  .finalizare {
+    grid-template-columns: 1fr;
+  }
+  .sumar {
+    position: static;
+  }
+}
+@media (max-width: 479px) {
+  .campuri {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* ── Ajustări de telefon ─────────────────────────────────────────── */
+@media (max-width: 1099px) {
+  .categorie:last-child {
+    grid-column: 1 / -1;
+  }
+}
+@media (max-width: 699px) {
+  .categorie-text {
+    z-index: 1;
+    max-width: 56%;
+  }
+  .categorie:not(:first-child):not(:last-child) img {
+    right: -18%;
+    height: 82%;
+  }
+  .categorie:first-child .categorie-text,
+  .categorie:last-child .categorie-text {
+    max-width: 60%;
+  }
+}
+
+/* ── Cont ────────────────────────────────────────────────────────── */
+.cont {
+  margin-top: 1.25rem;
+}
+.cont-cap {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 1.5rem 3rem;
+  padding: clamp(1.5rem, 3vw, 2.5rem) clamp(1.25rem, 4vw, 4rem);
+  background: var(--cerneala);
+  color: #fff;
+}
+.cont-demo {
+  display: inline-block;
+  margin-bottom: 0.9rem;
+  padding: 0.15rem 0.5rem;
+  background: var(--rosu);
+  font-size: 0.75rem;
+  font-weight: 600;
+}
+.cont-cap h1 {
+  font-size: clamp(1.9rem, 3.5vw, 3rem);
+  letter-spacing: -0.04em;
+}
+.cont-cap h1 + p {
+  margin-top: 0.4rem;
+  color: #c9c6bf;
+}
+.cont-cifre {
+  display: flex;
+  gap: clamp(1.5rem, 4vw, 3.5rem);
+}
+.cont-cifre dt {
+  color: #c9c6bf;
+  font-size: 0.8125rem;
+}
+.cont-cifre dd {
+  font-size: clamp(1.5rem, 2.4vw, 2.1rem);
+  font-weight: 700;
+  letter-spacing: -0.03em;
+  line-height: 1.2;
+}
+.cont-corp {
+  display: grid;
+  grid-template-columns: 16rem minmax(0, 1fr);
+  gap: clamp(1.5rem, 4vw, 4rem);
+  align-items: start;
+  margin-top: 2rem;
+}
+.cont-meniu {
+  position: sticky;
+  top: 8.5rem;
+  border-top: 1px solid var(--cerneala);
+}
+.cont-meniu a {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.9rem 0.75rem 0.9rem 0;
+  border-bottom: 1px solid var(--linie);
+  font-size: 0.8125rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+.cont-meniu a:hover {
+  color: var(--rosu);
+}
+.cont-meniu a[aria-current] {
+  padding-left: 0.75rem;
+  background: var(--camp);
+  box-shadow: inset 3px 0 0 var(--rosu);
+}
+.cont-meniu small {
+  color: var(--mut);
+  font-weight: 500;
+}
+.cont-meniu .cont-iesire {
+  color: var(--mut);
+  border-bottom: 0;
+}
+.cont-continut h2 {
+  margin-bottom: 1.25rem;
+}
+.cont-nota {
+  max-width: 38rem;
+  margin: -0.6rem 0 1.5rem;
+  color: var(--mut);
+}
+.comanda {
+  padding: 1.5rem clamp(1rem, 2.5vw, 2rem);
+  border: 1px solid var(--linie);
+}
+.comanda + .comanda {
+  margin-top: 1rem;
+}
+.comanda > header {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 0.5rem 1.5rem;
+}
+.comanda h3 {
+  font-size: 1.15rem;
+  font-weight: 700;
+}
+.comanda header p {
+  color: var(--mut);
+  font-size: 0.875rem;
+}
+.comanda .comanda-stare {
+  padding: 0.25rem 0.6rem;
+  background: var(--camp);
+  color: var(--cerneala);
+  font-size: 0.8125rem;
+  font-weight: 600;
+}
+.comanda .comanda-stare-activa {
+  background: var(--cerneala);
+  color: #fff;
+}
+/* bara de stare: patru pași legați printr-o linie */
+.comanda-pasi {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  margin-top: 1.5rem;
+  font-size: 0.8125rem;
+  color: var(--mut);
+}
+.comanda-pasi li {
+  position: relative;
+  padding-top: 1.1rem;
+}
+.comanda-pasi li::before {
+  content: '';
+  position: absolute;
+  top: 0.25rem;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: var(--linie-tare);
+}
+.comanda-pasi li::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 0.65rem;
+  height: 0.65rem;
+  border-radius: 50%;
+  background: var(--linie-tare);
+}
+.comanda-pasi li.facut {
+  color: var(--cerneala);
+  font-weight: 600;
+}
+.comanda-pasi li.facut::after {
+  background: var(--cerneala);
+}
+.comanda-pasi li.facut:not([aria-current])::before {
+  background: var(--cerneala);
+}
+.comanda-pasi li[aria-current]::after {
+  background: var(--rosu);
+  box-shadow: 0 0 0 4px rgb(207 19 34 / 0.18);
+}
+.comanda-pasi li:last-child::before {
+  display: none;
+}
+.comanda-detaliu {
+  margin-top: 0.9rem;
+  font-size: 0.875rem;
+}
+.comanda-linii {
+  margin-top: 1.1rem;
+  border-top: 1px solid var(--linie);
+}
+.comanda-linii li {
+  display: grid;
+  grid-template-columns: 4rem minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 1rem;
+  padding-block: 0.7rem;
+  border-bottom: 1px solid var(--linie);
+  line-height: 1.4;
+}
+.comanda-foto {
+  display: block;
+  width: 4rem;
+  height: 4rem;
+  background: var(--camp);
+}
+.comanda-foto img {
+  width: 100%;
+  height: 100%;
+  padding: 10%;
+  object-fit: contain;
+  mix-blend-mode: multiply;
+}
+.comanda-linii a:hover {
+  text-decoration: underline;
+}
+.comanda-linii small {
+  display: block;
+  color: var(--mut);
+  font-size: 0.8125rem;
+}
+.comanda-linii em {
+  font-style: normal;
+  font-weight: 600;
+  white-space: nowrap;
+}
+.comanda > footer {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.6rem 1rem;
+  margin-top: 1.1rem;
+}
+.comanda .buton {
+  min-height: 2.6rem;
+  padding-block: 0.5rem;
+  border-radius: 0;
+  font-size: 0.875rem;
+}
+.cont-grila {
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+}
+.cont-lista {
+  margin-bottom: 1.25rem;
+  border-top: 1px solid var(--linie);
+}
+.cont-lista li {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  padding-block: 0.9rem;
+  border-bottom: 1px solid var(--linie);
+}
+.cont-lista strong {
+  display: block;
+  font-weight: 600;
+}
+.cont-lista small {
+  color: var(--mut);
+  font-size: 0.8125rem;
+}
+.cont-adrese {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 1rem;
+}
+.cont-adrese address {
+  padding: 1.25rem;
+  border: 1px solid var(--linie);
+  font-style: normal;
+  line-height: 1.6;
+}
+.cont-adrese strong {
+  display: block;
+  margin-bottom: 0.4rem;
+  font-weight: 700;
+}
+.cont-adrese span {
+  display: flex;
+  gap: 1rem;
+  margin-top: 0.9rem;
+  font-size: 0.875rem;
+}
+.cont-adresa-noua {
+  min-height: 9rem;
+  border: 1px dashed var(--linie-tare);
+  color: var(--mut);
+  font-weight: 600;
+}
+.cont-adresa-noua:hover {
+  border-color: var(--cerneala);
+  color: var(--cerneala);
+}
+.cont-formular {
+  max-width: 40rem;
+}
+.cont-formular input:not([type='checkbox']) {
+  border-radius: 0;
+}
+.cont-bifa {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+}
+.cont-formular .cont-bifa input {
+  width: 1.1rem;
+  height: 1.1rem;
+  accent-color: var(--cerneala);
+}
+.cont-formular .cont-bifa span {
+  margin: 0;
+  font-weight: 400;
+}
+.cont-salveaza {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+.cont-salveaza .buton {
+  border-radius: 0;
+}
+.cont-salveaza p {
+  color: #1d6b3a;
+  font-weight: 600;
+}
+@media (max-width: 1199px) {
+  .cont-grila {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+@media (max-width: 859px) {
+  .cont-cap {
+    margin-inline: calc(var(--margine) * -1);
+  }
+  .cont-corp {
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+    margin-top: 1rem;
+  }
+  .cont-meniu {
+    position: static;
+    border-top: 0;
+    margin-inline: calc(var(--margine) * -1);
+    padding-inline: var(--margine);
+    overflow-x: auto;
+    scrollbar-width: none;
+  }
+  .cont-meniu ul {
+    display: flex;
+    gap: 0.4rem;
+  }
+  .cont-meniu a {
+    gap: 0.5rem;
+    padding: 0.55rem 0.9rem;
+    border: 1px solid var(--linie-tare);
+    white-space: nowrap;
+  }
+  .cont-meniu a[aria-current] {
+    padding-left: 0.9rem;
+    border-color: var(--cerneala);
+    background: var(--cerneala);
+    box-shadow: none;
+    color: #fff;
+  }
+  .cont-meniu .cont-iesire {
+    border: 1px solid var(--linie-tare);
+  }
+  .cont-grila {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+  .cont-adrese {
+    grid-template-columns: 1fr;
+  }
+  .comanda-pasi {
+    font-size: 0.6875rem;
+  }
+}

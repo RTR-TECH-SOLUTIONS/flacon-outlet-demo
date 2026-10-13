@@ -1,0 +1,212 @@
+---
+import Baza from '../layouts/Baza.astro';
+import CardProdus from '../components/CardProdus.tsx';
+import { motive, produse, subtitlu } from '../data/catalog';
+import { lei } from '../lib/format';
+
+// TODO(real): contul vine din autentificare (Supabase Auth) și din comenzile reale.
+// Aici e un client de exemplu, ca să se vadă cum arată pagina.
+const dupaId = (id: string) => produse.find((p) => p.id === id)!;
+const linie = (id: string, cantitate = 1) => ({ p: dupaId(id), cantitate });
+
+const pasi = ['Plasată', 'Pregătită', 'Predată curierului', 'Livrată'];
+const comenzi = [
+  {
+    numar: 'FO-104512',
+    data: '12 octombrie 2026',
+    pas: 2,
+    stare: 'În drum spre easybox',
+    detaliu: 'Sameday easybox Iulius Mall, Cluj-Napoca · AWB 4EMG7104512 · estimat mâine, 14 octombrie',
+    linii: [linie('dior-sauvage'), linie('the-ordinary-niacinamide-10-zinc-1', 2)],
+    livrare: 0,
+  },
+  {
+    numar: 'FO-103977',
+    data: '28 septembrie 2026',
+    pas: 3,
+    stare: 'Livrată pe 29 septembrie',
+    detaliu: 'FAN Courier, la adresă · plătită cu cardul',
+    linii: [linie('lancome-la-vie-est-belle'), linie('kerastase-elixir-ultime-l-huile-originale')],
+    livrare: 0,
+  },
+  {
+    numar: 'FO-102210',
+    data: '3 septembrie 2026',
+    pas: 3,
+    stare: 'Livrată pe 5 septembrie',
+    detaliu: 'Sameday easybox Iulius Mall, Cluj-Napoca · ramburs',
+    linii: [linie('lattafa-khamrah-qahwa'), linie('la-roche-posay-effaclar-serum')],
+    livrare: 14.99,
+  },
+];
+const total = (c: (typeof comenzi)[0]) => c.linii.reduce((s, l) => s + l.p.pret * l.cantitate, 0) + c.livrare;
+const economisit = comenzi.reduce((s, c) => s + c.linii.reduce((t, l) => t + (l.p.pretRaft - l.p.pret) * l.cantitate, 0), 0);
+
+const favorite = ['chanel-coco-mademoiselle', 'versace-eros', 'olaplex-no-7-bonding-oil', 'estee-lauder-advanced-night-repair', 'prada-paradoxe', 'nuxe-huile-prodigieuse-florale'].map(dupaId);
+const alerte = [
+  { ce: 'Chanel Bleu de Chanel, ca tester', cand: 'Te anunțăm când intră un tester în stoc' },
+  { ce: 'Creed Aventus, sub 500 lei', cand: 'Acum costă ' + lei(dupaId('creed-aventus').pret) },
+];
+
+const sectiuni = [
+  { id: 'comenzi', nume: 'Comenzile mele', numar: comenzi.length },
+  { id: 'favorite', nume: 'Favorite', numar: favorite.length },
+  { id: 'alerte', nume: 'Alerte de stoc și preț', numar: alerte.length },
+  { id: 'adrese', nume: 'Adrese' },
+  { id: 'date', nume: 'Date personale' },
+];
+---
+
+<Baza titlu="Contul meu · Flacon Outlet">
+  <div class="cadru cont">
+    <header class="cont-cap">
+      <div>
+        <p class="cont-demo">Cont de exemplu, pentru prezentare</p>
+        <h1>Bună, Andreea</h1>
+        <p>andreea.tudor@exemplu.ro · client din martie 2026</p>
+      </div>
+      <dl class="cont-cifre">
+        <div><dt>Comenzi</dt><dd>{comenzi.length}</dd></div>
+        <div><dt>Economisit față de raft</dt><dd>{lei(Math.round(economisit))}</dd></div>
+        <div><dt>Favorite</dt><dd>{favorite.length}</dd></div>
+      </dl>
+    </header>
+
+    <div class="cont-corp">
+      <nav class="cont-meniu" aria-label="Secțiunile contului">
+        <ul>
+          {sectiuni.map((s, i) => (
+            <li>
+              <a href={`#${s.id}`} data-fila={s.id} aria-current={i === 0 ? 'true' : undefined}>
+                {s.nume}
+                {s.numar && <small>{s.numar}</small>}
+              </a>
+            </li>
+          ))}
+          <li><a href="/" class="cont-iesire">Ieși din cont</a></li>
+        </ul>
+      </nav>
+
+      <div class="cont-continut">
+        <section id="comenzi" data-sectiune>
+          <h2>Comenzile mele</h2>
+          {comenzi.map((c) => (
+            <article class="comanda">
+              <header>
+                <div>
+                  <h3>Comanda {c.numar}</h3>
+                  <p>{c.data} · {c.linii.reduce((s, l) => s + l.cantitate, 0)} produse · {lei(+total(c).toFixed(2))}</p>
+                </div>
+                <p class={c.pas < 3 ? 'comanda-stare comanda-stare-activa' : 'comanda-stare'}>{c.stare}</p>
+              </header>
+
+              <ol class="comanda-pasi" aria-label="Starea comenzii">
+                {pasi.map((p, i) => <li class={i <= c.pas ? 'facut' : ''} aria-current={i === c.pas ? 'step' : undefined}>{p}</li>)}
+              </ol>
+              <p class="comanda-detaliu">{c.detaliu}</p>
+
+              <ul class="comanda-linii">
+                {c.linii.map(({ p, cantitate }) => (
+                  <li>
+                    <a class="comanda-foto" href={`/produs/${p.id}`}><img src={`/produse/${p.id}.webp`} alt="" width="640" height="640" loading="lazy" /></a>
+                    <span>
+                      <a href={`/produs/${p.id}`}><strong>{p.brand}</strong> {p.nume}</a>
+                      <small>{subtitlu(p)} · {motive[p.motiv].nume} · {cantitate} buc.</small>
+                    </span>
+                    <em>{lei(+(p.pret * cantitate).toFixed(2))}</em>
+                  </li>
+                ))}
+              </ul>
+
+              <footer>
+                {c.pas < 3 && <a class="buton buton-plin" href="#comenzi">Urmărește coletul</a>}
+                <a class="buton buton-contur" href="#comenzi">Descarcă factura</a>
+                {c.pas === 3 && <a class="buton buton-contur" href="#comenzi">Comandă din nou</a>}
+                {c.pas === 3 && <a class="legatura" href="#comenzi">Returnează un produs</a>}
+              </footer>
+            </article>
+          ))}
+        </section>
+
+        <section id="favorite" data-sectiune>
+          <h2>Favorite</h2>
+          <p class="cont-nota">Produsele la care ai apăsat inima. Stocul de outlet se termină repede, așa că îți scriem dacă rămâne ultima bucată.</p>
+          <div class="grila cont-grila">
+            {favorite.map((p) => <CardProdus produs={p} />)}
+          </div>
+        </section>
+
+        <section id="alerte" data-sectiune>
+          <h2>Alerte de stoc și preț</h2>
+          <p class="cont-nota">Spune-ne ce cauți și îți scriem în dimineața în care intră lotul.</p>
+          <ul class="cont-lista">
+            {alerte.map((a) => (
+              <li>
+                <span><strong>{a.ce}</strong><small>{a.cand}</small></span>
+                <button type="button" class="legatura">Oprește alerta</button>
+              </li>
+            ))}
+          </ul>
+          <a class="buton buton-contur" href="/produse">Adaugă o alertă nouă</a>
+        </section>
+
+        <section id="adrese" data-sectiune>
+          <h2>Adrese</h2>
+          <div class="cont-adrese">
+            <address>
+              <strong>Easybox preferat</strong>
+              Sameday easybox Iulius Mall<br />
+              Str. Alexandru Vaida Voevod 53B<br />
+              Cluj-Napoca, Cluj
+              <span><button type="button" class="legatura">Schimbă</button></span>
+            </address>
+            <address>
+              <strong>Acasă</strong>
+              Andreea Tudor<br />
+              Str. Fabricii 12, bl. C3, ap. 27<br />
+              Cluj-Napoca, Cluj · 0744 123 456
+              <span><button type="button" class="legatura">Editează</button><button type="button" class="legatura">Șterge</button></span>
+            </address>
+            <button type="button" class="cont-adresa-noua">Adaugă o adresă</button>
+          </div>
+        </section>
+
+        <section id="date" data-sectiune>
+          <h2>Date personale</h2>
+          <form class="campuri cont-formular" data-cont-formular>
+            <label><span>Prenume</span><input type="text" value="Andreea" autocomplete="given-name" /></label>
+            <label><span>Nume</span><input type="text" value="Tudor" autocomplete="family-name" /></label>
+            <label><span>E-mail</span><input type="email" value="andreea.tudor@exemplu.ro" autocomplete="email" /></label>
+            <label><span>Telefon</span><input type="tel" value="0744 123 456" autocomplete="tel" /></label>
+            <label class="camp-lat cont-bifa"><input type="checkbox" checked /><span>Vreau e-mailul de marți și vineri cu loturile noi</span></label>
+            <div class="camp-lat cont-salveaza">
+              <button type="submit" class="buton buton-plin">Salvează modificările</button>
+              <p role="status" hidden>Datele au fost salvate.</p>
+            </div>
+          </form>
+        </section>
+      </div>
+    </div>
+  </div>
+</Baza>
+
+<script>
+  // File simple: se vede o singură secțiune, aleasă din meniu sau din adresa paginii (#favorite).
+  const sectiuni = [...document.querySelectorAll<HTMLElement>('[data-sectiune]')];
+  const file = [...document.querySelectorAll<HTMLElement>('[data-fila]')];
+  const arata = (id: string) => {
+    const tinta = sectiuni.some((s) => s.id === id) ? id : 'comenzi';
+    sectiuni.forEach((s) => (s.hidden = s.id !== tinta));
+    file.forEach((f) => (f.dataset.fila === tinta ? f.setAttribute('aria-current', 'true') : f.removeAttribute('aria-current')));
+  };
+  arata(location.hash.slice(1));
+  window.addEventListener('hashchange', () => {
+    arata(location.hash.slice(1));
+    window.scrollTo({ top: 0 });
+  });
+
+  document.querySelector<HTMLFormElement>('[data-cont-formular]')?.addEventListener('submit', (e) => {
+    e.preventDefault();
+    (e.currentTarget as HTMLFormElement).querySelector<HTMLElement>('[role="status"]')!.hidden = false;
+  });
+</script>

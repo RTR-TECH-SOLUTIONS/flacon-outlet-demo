@@ -1,0 +1,51 @@
+---
+import CardProdus from './CardProdus.tsx';
+import type { Produs } from '../data/catalog';
+
+interface Props {
+  titlu: string;
+  nota?: string;
+  href: string;
+  produse: Produs[];
+}
+const { titlu, nota, href, produse } = Astro.props;
+---
+
+<section class="rail cadru" data-rail>
+  <div class="rail-cap">
+    <div>
+      <h2>{titlu}</h2>
+      {nota && <p>{nota}</p>}
+    </div>
+    <div class="rail-unelte">
+      <a class="legatura" href={href}>Vezi toate</a>
+      <button type="button" class="rail-sageata" data-rail-pas="-1" aria-label={`${titlu}: produsele anterioare`} disabled>
+        <svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path d="M15 5l-7 7 7 7" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+      </button>
+      <button type="button" class="rail-sageata" data-rail-pas="1" aria-label={`${titlu}: produsele următoare`}>
+        <svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path d="M9 5l7 7-7 7" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+      </button>
+    </div>
+  </div>
+  <div class="rail-banda" tabindex="0" role="group" aria-label={titlu} data-rail-banda>
+    {produse.map((p) => <CardProdus produs={p} />)}
+  </div>
+</section>
+
+<script>
+  // Săgețile derulează cu aproape o lățime de bandă și se dezactivează la capete.
+  document.querySelectorAll<HTMLElement>('[data-rail]').forEach((rail) => {
+    const banda = rail.querySelector<HTMLElement>('[data-rail-banda]')!;
+    const [inapoi, inainte] = rail.querySelectorAll<HTMLButtonElement>('[data-rail-pas]');
+    const stare = () => {
+      inapoi.disabled = banda.scrollLeft < 8;
+      inainte.disabled = banda.scrollLeft + banda.clientWidth > banda.scrollWidth - 8;
+    };
+    [inapoi, inainte].forEach((b) =>
+      b.addEventListener('click', () => banda.scrollBy({ left: Number(b.dataset.railPas) * banda.clientWidth * 0.8, behavior: 'smooth' })),
+    );
+    banda.addEventListener('scroll', stare, { passive: true });
+    window.addEventListener('resize', stare);
+    stare();
+  });
+</script>

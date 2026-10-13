@@ -1,0 +1,361 @@
+---
+import Baza from '../layouts/Baza.astro';
+import Rail from '../components/Rail.astro';
+import { branduriCuLogo, categorii, dupaReducere, logoBrand, motive, produse, reducere, type Motiv } from '../data/catalog';
+import { lei, PRAG_LIVRARE_GRATUITA } from '../lib/format';
+
+const dupaId = (id: string) => produse.find((p) => p.id === id)!;
+
+const reduceriMari = dupaReducere.filter((p) => p.categorie === 'parfumuri').slice(0, 12);
+const testere = produse.filter((p) => p.motiv === 'tester').slice(0, 12);
+const sub100 = dupaReducere.filter((p) => p.pret <= 100 && p.motiv !== 'tester').slice(0, 12);
+const ultimele = produse.filter((p) => p.stoc <= 3);
+
+const maxim = reducere(dupaReducere[0]);
+// „19 produse”, dar „21 de produse”
+const bucati = (n: number, ce: string) => `${n} ${n % 100 >= 20 || n % 100 === 0 ? 'de ' : ''}${ce}`;
+const numarPe = (m: Motiv) => produse.filter((p) => p.motiv === m).length;
+const interval = (m: Motiv) => {
+  const r = produse.filter((p) => p.motiv === m).map(reducere);
+  return `${Math.min(...r)}-${Math.max(...r)}%`;
+};
+
+const pozaCategorie: Record<string, string> = {
+  parfumuri: 'yves-saint-laurent-black-opium',
+  machiaj: 'dior-addict-lip-maximizer',
+  ten: 'estee-lauder-advanced-night-repair',
+  par: 'kerastase-elixir-ultime-l-huile-originale',
+  corp: 'nuxe-huile-prodigieuse-florale',
+  seturi: 'lancome-la-vie-est-belle-set',
+};
+
+
+const recenzii = [
+  {
+    text: 'Am luat Sauvage tester. A venit în cutie albă, cum scria, cu capac. L-am verificat după lot și e din ianuarie.',
+    cine: 'Radu P., Brașov',
+    ce: 'Dior Sauvage, tester',
+  },
+  {
+    text: 'Cutia de la La Vie Est Belle avea un colț turtit, exact ca în poza pe care mi-au trimis-o pe WhatsApp înainte. Flaconul, sigilat.',
+    cine: 'Ioana M., Cluj-Napoca',
+    ce: 'Lancôme La Vie Est Belle, cutie deteriorată',
+  },
+  {
+    text: 'Serul expira în patru luni și scria asta clar pe pagină. La jumătate de preț îl termin oricum în două.',
+    cine: 'Andreea T., Iași',
+    ce: 'La Roche-Posay Effaclar Serum, termen scurt',
+  },
+];
+---
+
+<Baza titlu="Flacon Outlet: parfumuri și cosmetice originale la preț de outlet">
+  <section class="cadru campanii" aria-roledescription="carusel" aria-label="Campanii">
+    <div class="campanii-banda" data-campanii>
+      <article class="campanie campanie-foto">
+        <picture>
+          <source media="(max-width: 699px)" srcset="/hero-outlet-mic.webp" />
+          <img src="/hero-outlet.webp" alt="" width="2400" height="1018" fetchpriority="high" />
+        </picture>
+        <div class="campanie-text">
+          <p class="campanie-sus">Outlet de toamnă · până la -{maxim}%</p>
+          <h1>Același parfum. Doar cutia are un colț lovit.</h1>
+          <p>Testere, cutii lovite la transport și ultimele bucăți din lot. Toate originale, cu factură.</p>
+          <a class="buton buton-alb" href="/produse">Vezi toate ofertele</a>
+        </div>
+      </article>
+
+      <article class="campanie campanie-testere">
+        <div class="campanie-text">
+          <p class="campanie-sus">Testere de parfum</p>
+          <h2>Testere la jumătate de preț</h2>
+          <p>Flaconul de pe raftul parfumeriei: plin, original, în cutie albă. {numarPe('tester')} în stoc, de la {lei(Math.min(...produse.filter((p) => p.motiv === 'tester').map((p) => p.pret)))}.</p>
+          <a class="buton buton-alb" href="/produse?motiv=tester">Vezi testerele</a>
+        </div>
+        <div class="campanie-produse">
+          {['yves-saint-laurent-libre', 'chanel-coco-mademoiselle', 'dior-sauvage', 'paco-rabanne-1-million', 'versace-dylan-blue-pour-homme'].map((id) => <img src={`/decupaj/${id}.webp`} alt={`${dupaId(id).brand} ${dupaId(id).nume}`} loading="lazy" />)}
+        </div>
+        <span class="campanie-procent">-{Math.max(...testere.map(reducere))}%</span>
+      </article>
+
+      <article class="campanie campanie-arabesc">
+        <div class="campanie-text">
+          <p class="campanie-sus">Lattafa · Armaf · Afnan · Al Haramain</p>
+          <h2>Parfumuri arabești, 100 ml de la {lei(Math.min(...produse.filter((p) => p.sub === 'arabesc').map((p) => p.pret)))}</h2>
+          <p>Cele mai căutate arome orientale, cu cutia zgâriată sau în ambalajul vechi.</p>
+          <a class="buton buton-alb" href="/produse?cat=parfumuri&sub=arabesc">Vezi parfumurile arabești</a>
+        </div>
+        <div class="campanie-produse">
+          {['lattafa-eclaire', 'lattafa-khamrah-qahwa', 'lattafa-asad', 'afnan-9-pm-rebel'].map((id) => <img src={`/decupaj/${id}.webp`} alt={`${dupaId(id).brand} ${dupaId(id).nume}`} loading="lazy" />)}
+        </div>
+      </article>
+    </div>
+
+    <div class="campanii-control">
+      <button type="button" class="campanii-sageata" data-campanii-pas="-1" aria-label="Campania anterioară">
+        <svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true"><path d="M15 5l-7 7 7 7" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+      </button>
+      <div class="campanii-puncte" data-campanii-puncte>
+        {[0, 1, 2].map((i) => <button type="button" aria-label={`Campania ${i + 1}`} aria-current={i === 0 ? 'true' : undefined} />)}
+      </div>
+      <button type="button" class="campanii-sageata" data-campanii-pas="1" aria-label="Campania următoare">
+        <svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true"><path d="M9 5l7 7-7 7" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+      </button>
+    </div>
+  </section>
+
+  <section class="cadru servicii" id="livrare" aria-label="Livrare, plată și retur">
+    <ul>
+      <li>
+        <svg viewBox="0 0 32 32" aria-hidden="true"><path d="M3 8h15v13H3zM18 12h6l5 5v4H18zM9 24.5a2.5 2.5 0 1 0 0-5 2.5 2.5 0 0 0 0 5zM23 24.5a2.5 2.5 0 1 0 0-5 2.5 2.5 0 0 0 0 5z" /></svg>
+        <div>
+          <strong>Livrare în 24-48 de ore</strong>
+          <span>Comanzi până la 14, pleacă azi</span>
+        </div>
+      </li>
+      <li>
+        <svg viewBox="0 0 32 32" aria-hidden="true"><path d="M4 10l12-6 12 6v12l-12 6-12-6zM4 10l12 6 12-6M16 16v12M10 7l12 6" /></svg>
+        <div>
+          <strong>Gratuită peste {PRAG_LIVRARE_GRATUITA} lei</strong>
+          <span>Sub prag, de la 14,99 lei la easybox</span>
+        </div>
+      </li>
+      <li>
+        <svg viewBox="0 0 32 32" aria-hidden="true"><path d="M4 8h24v16H4zM4 13h24M8 19h6" /></svg>
+        <div>
+          <strong>Card sau ramburs</strong>
+          <span>Plată online securizată sau la curier</span>
+        </div>
+      </li>
+      <li>
+        <svg viewBox="0 0 32 32" aria-hidden="true"><path d="M6 12h14a6 6 0 0 1 0 12h-8M6 12l5-5M6 12l5 5" /></svg>
+        <div>
+          <strong>Retur în 14 zile</strong>
+          <span>Pentru produsele sigilate</span>
+        </div>
+      </li>
+    </ul>
+  </section>
+
+  <section class="cadru branduri" aria-label="Branduri">
+    <ul>
+      {branduriCuLogo.map((b) => <li><a href={`/produse?brand=${encodeURIComponent(b)}`}><img src={logoBrand(b)} alt={b} loading="lazy" /></a></li>)}
+    </ul>
+  </section>
+
+  <Rail
+    titlu="Cele mai mari reduceri la parfumuri"
+    nota="Ordonate după cât economisești față de prețul de raft."
+    href="/produse"
+    produse={reduceriMari}
+  />
+
+  <section class="cadru reclame reclame-trei" aria-label="Oferte de brand">
+    <a class="reclama reclama-eros" href="/produs/versace-eros">
+      <div class="reclama-text">
+        <span class="reclama-brand">Versace</span>
+        <span class="reclama-nume">Eros, apă de toaletă 50 ml</span>
+        <span class="reclama-pret">
+          <span class="motiv">{motive[dupaId('versace-eros').motiv].nume}</span>
+          <strong>{lei(dupaId('versace-eros').pret)}</strong>
+          <s>{lei(dupaId('versace-eros').pretRaft)}</s>
+        </span>
+      </div>
+      <img src="/decupaj/versace-eros.webp" alt="" loading="lazy" />
+    </a>
+    <a class="reclama reclama-million" href="/produs/paco-rabanne-lady-million">
+      <div class="reclama-text">
+        <span class="reclama-brand">Paco Rabanne</span>
+        <span class="reclama-nume">Lady Million, apă de parfum 100 ml</span>
+        <span class="reclama-pret">
+          <span class="motiv">{motive[dupaId('paco-rabanne-lady-million').motiv].nume}</span>
+          <strong>{lei(dupaId('paco-rabanne-lady-million').pret)}</strong>
+          <s>{lei(dupaId('paco-rabanne-lady-million').pretRaft)}</s>
+        </span>
+      </div>
+      <img src="/decupaj/paco-rabanne-lady-million.webp" alt="" loading="lazy" />
+    </a>
+    <a class="reclama reclama-dermato" href="/produse?motiv=termen">
+      <div class="reclama-text">
+        <span class="reclama-brand">La Roche-Posay</span>
+        <span class="reclama-nume">Seruri cu termen scurt, la jumătate de preț</span>
+        <span class="reclama-pret"><strong>de la {lei(Math.min(...produse.filter((p) => p.brand === 'La Roche-Posay').map((p) => p.pret)))}</strong></span>
+      </div>
+      <img src="/decupaj/la-roche-posay-hyalu-b5-serum.webp" alt="" loading="lazy" />
+    </a>
+  </section>
+
+
+  <section class="cadru categorii-sectiune">
+    <h2>Categorii</h2>
+    <div class="categorii-grila">
+      {
+        categorii.map((c) => (
+          <a class="categorie" href={`/produse?cat=${c.id}`}>
+            <img src={`/produse/${pozaCategorie[c.id]}.webp`} alt="" width="640" height="640" loading="lazy" />
+            <span class="categorie-text">
+              <strong>{c.nume}</strong>
+              <span>{c.scurt}</span>
+              <small>{bucati(produse.filter((p) => p.categorie === c.id).length, 'oferte')}</small>
+            </span>
+          </a>
+        ))
+      }
+    </div>
+  </section>
+
+  <Rail
+    titlu="Testere de parfum"
+    nota="Flaconul de raft al parfumeriilor: plin, original, în cutie albă."
+    href="/produse?motiv=tester"
+    produse={testere}
+  />
+
+  <section class="cadru reclame reclame-doi" aria-label="Oferte pe categorii">
+    <a class="reclama reclama-par" href="/produse?cat=par">
+      <div class="reclama-text">
+        <span class="reclama-brand">Kérastase · Olaplex</span>
+        <span class="reclama-nume">Îngrijire de salon, cu ambalajul vechi</span>
+        <span class="reclama-pret"><strong>până la -{Math.max(...produse.filter((p) => p.categorie === 'par').map(reducere))}%</strong></span>
+      </div>
+      <img class="reclama-al-doilea" src="/decupaj/olaplex-no-7-bonding-oil.webp" alt="" loading="lazy" />
+      <img src="/decupaj/kerastase-elixir-ultime-l-huile-originale.webp" alt="" loading="lazy" />
+    </a>
+    <a class="reclama reclama-opium" href="/produs/yves-saint-laurent-black-opium">
+      <div class="reclama-text">
+        <span class="reclama-brand">Yves Saint Laurent</span>
+        <span class="reclama-nume">Black Opium, apă de parfum 100 ml</span>
+        <span class="reclama-pret">
+          <span class="motiv">{motive[dupaId('yves-saint-laurent-black-opium').motiv].nume}</span>
+          <strong>{lei(dupaId('yves-saint-laurent-black-opium').pret)}</strong>
+          <s>{lei(dupaId('yves-saint-laurent-black-opium').pretRaft)}</s>
+        </span>
+      </div>
+      <img src="/decupaj/yves-saint-laurent-black-opium.webp" alt="" loading="lazy" />
+    </a>
+  </section>
+
+  <Rail titlu="Sub 100 lei" href="/produse?max=100" produse={sub100} />
+
+  <section class="cadru motive-sectiune" id="cum-functioneaza">
+    <div class="motive-intro">
+      <h2>De ce e mai ieftin</h2>
+      <p>
+        Nu facem reduceri de sezon. Fiecare produs are un motiv concret pentru care nu mai poate sta pe raftul unei
+        parfumerii, iar motivul e scris pe el.
+      </p>
+    </div>
+    <ul class="motive-dale">
+      {
+        (Object.keys(motive) as Motiv[]).map((m) => {
+          const vedeta = dupaReducere.find((p) => p.motiv === m)!;
+          return (
+            <li>
+              <a href={`/produse?motiv=${m}`}>
+                <span class="motive-foto">
+                  <img src={`/produse/${vedeta.id}.webp`} alt="" width="640" height="640" loading="lazy" />
+                  <b class="steag">{motive[m].nume}</b>
+                  <span class="motive-procent">
+                    <small>până la</small>-{reducere(vedeta)}%
+                  </span>
+                </span>
+                <strong>{motive[m].scurt}</strong>
+                <span class="motive-text">{motive[m].detaliu}</span>
+                <em>Vezi cele {bucati(numarPe(m), 'produse')}</em>
+              </a>
+            </li>
+          );
+        })
+      }
+    </ul>
+  </section>
+
+  <section class="autenticitate" id="autenticitate">
+    <div class="cadru autenticitate-rand">
+      <div class="autenticitate-text">
+        <h2>Original, și poți verifica singur</h2>
+        <p>
+          Cumpărăm doar de la distribuitori autorizați din Uniunea Europeană. Fiecare produs are codul de lot al
+          producătorului, pe care îl treci într-un verificator public și vezi data fabricației.
+        </p>
+      </div>
+      <ol class="pasi">
+          <li>
+            <strong>Recepție</strong>
+            Fiecare bucată este deschisă din bax, fotografiată și încadrată într-una din cele șase etichete.
+          </li>
+          <li>
+            <strong>Lot și termen</strong>
+            Codul de lot și data de expirare apar pe pagina produsului și pe factură.
+          </li>
+          <li>
+            <strong>Poză la cerere</strong>
+            La cutiile deteriorate îți trimitem pe WhatsApp poza bucății tale, înainte să plătești.
+          </li>
+        </ol>
+    </div>
+  </section>
+
+  {ultimele.length > 0 && <Rail titlu="Ultimele bucăți" nota="Resturi de lot. Când se termină, nu mai vin." href="/produse?motiv=ultimele" produse={ultimele} />}
+
+
+  <section class="cadru pareri">
+    <h2>Ce spun cei care au comandat</h2>
+    <ul>
+      {
+        recenzii.map((r) => (
+          <li>
+            <blockquote>{r.text}</blockquote>
+            <p>
+              <strong>{r.cine}</strong>
+              <span>{r.ce}</span>
+            </p>
+          </li>
+        ))
+      }
+    </ul>
+  </section>
+
+  <section class="abonare">
+    <div class="cadru abonare-rand">
+      <div>
+        <h2>Loturile noi intră marțea și vinerea</h2>
+        <p>Îți scriem în dimineața respectivă, înainte să se termine testerele. Două e-mailuri pe săptămână, atât.</p>
+      </div>
+      <form class="abonare-formular" data-abonare>
+        <label class="sr-only" for="abonare-email">Adresa de e-mail</label>
+        <input id="abonare-email" type="email" required placeholder="adresa@exemplu.ro" autocomplete="email" />
+        <button class="buton buton-alb" type="submit">Anunță-mă</button>
+        <p class="abonare-mesaj" role="status" hidden>Gata. Primul e-mail vine marți dimineață.</p>
+      </form>
+    </div>
+  </section>
+</Baza>
+
+<script>
+  // Caruselul de campanii: derulare nativă cu scroll-snap, plus săgeți, puncte și avans automat.
+  const banda = document.querySelector<HTMLElement>('[data-campanii]');
+  if (banda) {
+    const puncte = [...document.querySelectorAll<HTMLButtonElement>('[data-campanii-puncte] button')];
+    const numar = banda.children.length;
+    const curent = () => Math.round(banda.scrollLeft / banda.clientWidth);
+    const mergi = (i: number) => banda.scrollTo({ left: ((i + numar) % numar) * banda.clientWidth, behavior: 'smooth' });
+    banda.addEventListener('scroll', () => puncte.forEach((p, i) => (i === curent() ? p.setAttribute('aria-current', 'true') : p.removeAttribute('aria-current'))), { passive: true });
+    puncte.forEach((p, i) => p.addEventListener('click', () => mergi(i)));
+    document.querySelectorAll<HTMLElement>('[data-campanii-pas]').forEach((b) => b.addEventListener('click', () => mergi(curent() + Number(b.dataset.campaniiPas))));
+
+    const sectiune = banda.closest('section')!;
+    let oprit = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    ['pointerenter', 'focusin', 'touchstart'].forEach((e) => sectiune.addEventListener(e, () => (oprit = true), { passive: true }));
+    sectiune.addEventListener('pointerleave', () => (oprit = window.matchMedia('(prefers-reduced-motion: reduce)').matches));
+    setInterval(() => !oprit && !document.hidden && mergi(curent() + 1), 6000);
+  }
+
+  // TODO(real): abonarea se trimite la serviciul de newsletter (Resend / Brevo).
+  document.querySelector<HTMLFormElement>('[data-abonare]')?.addEventListener('submit', (e) => {
+    e.preventDefault();
+    const formular = e.currentTarget as HTMLFormElement;
+    formular.querySelector<HTMLElement>('.abonare-mesaj')!.hidden = false;
+    formular.querySelector('input')!.value = '';
+  });
+</script>

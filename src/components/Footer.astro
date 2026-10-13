@@ -1,0 +1,56 @@
+---
+import Marca from './Marca.astro';
+import { categorii } from '../data/catalog';
+---
+
+<footer class="subsol">
+  <div class="cadru subsol-sus">
+    <div class="subsol-marca">
+      <Marca />
+      <p>
+        Cumpărăm loturi de la distribuitori autorizați: testere, cutii lovite la transport, ambalaje scoase din
+        circulație. Le verificăm bucată cu bucată și le vindem cu motivul reducerii scris pe fiecare.
+      </p>
+      <p class="subsol-contact">
+        <a href="tel:+40312345678">031 234 56 78</a><br />
+        <a href="mailto:comenzi@flaconoutlet.ro">comenzi@flaconoutlet.ro</a><br />
+        Luni-vineri, 9:00-17:00
+      </p>
+    </div>
+
+    <nav aria-label="Categorii în subsol">
+      <h2>Categorii</h2>
+      <ul>
+        {categorii.map((c) => <li><a href={`/produse?cat=${c.id}`}>{c.nume}</a></li>)}
+        <li><a href="/produse?motiv=tester">Testere</a></li>
+      </ul>
+    </nav>
+
+    <nav aria-label="Informații">
+      <h2>Informații</h2>
+      <ul>
+        <li><a href="/#cum-functioneaza">De ce e mai ieftin</a></li>
+        <li><a href="/#livrare">Livrare și plată</a></li>
+        <li><a href="/#livrare">Retur în 14 zile</a></li>
+        <li><a href="/#autenticitate">Cum verificăm autenticitatea</a></li>
+        <li><a href="/produse">Urmărește comanda</a></li>
+      </ul>
+    </nav>
+
+    <div>
+      <h2>Livrare și plată</h2>
+      <ul class="subsol-parteneri">
+        <li>Sameday easybox</li>
+        <li>FAN Courier</li>
+        <li>Cargus</li>
+        <li>Card Visa / Mastercard</li>
+        <li>Ramburs la curier</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="cadru subsol-jos">
+    <p>© 2026 Flacon Outlet. Site demonstrativ: prețurile și stocurile sunt exemple.</p>
+    <p>Mărcile afișate aparțin producătorilor lor.</p>
+  </div>
+</footer>

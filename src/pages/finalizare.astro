@@ -1,0 +1,10 @@
+---
+import Baza from '../layouts/Baza.astro';
+import Finalizare from '../components/Finalizare.tsx';
+---
+
+<Baza titlu="Finalizează comanda · Flacon Outlet" simplu>
+  <div class="cadru">
+    <Finalizare client:load />
+  </div>
+</Baza>

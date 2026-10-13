@@ -1,0 +1,133 @@
+@import 'tailwindcss';
+@import './componente.css';
+@import './pagini.css';
+
+@theme {
+  --font-sans: 'Manrope Variable', system-ui, sans-serif;
+}
+
+:root {
+  --cerneala: #151413;
+  --hartie: #ffffff;
+  --camp: #f4f3f0;
+  --camp-inchis: #eae8e3;
+  --linie: #e3e1dc;
+  --linie-tare: #c4c1b9;
+  --mut: #66635d;
+  /* singurul accent: roșul etichetei de preț */
+  --rosu: #cf1322;
+  --rosu-inchis: #a80f1b;
+
+  --raza: 4px;
+  --raza-mica: 2px;
+  --cadru: 1880px;
+  --margine: clamp(1rem, 3vw, 3rem);
+  --ritm: clamp(2.75rem, 6vw, 4.5rem);
+  --usor: cubic-bezier(0.2, 0.7, 0.2, 1);
+}
+
+html {
+  font-family: var(--font-sans);
+  color: var(--cerneala);
+  background: var(--hartie);
+  -webkit-text-size-adjust: 100%;
+  scroll-behavior: smooth;
+  scroll-padding-top: 9rem;
+}
+html.fara-scroll {
+  overflow: hidden;
+}
+body {
+  font-size: 0.9375rem;
+  line-height: 1.55;
+  font-variant-numeric: tabular-nums;
+}
+h1,
+h2,
+h3 {
+  font-weight: 800;
+  letter-spacing: -0.025em;
+  line-height: 1.15;
+  text-wrap: balance;
+}
+h2 {
+  font-size: clamp(1.35rem, 2.4vw, 1.75rem);
+}
+a,
+button {
+  transition:
+    color 160ms var(--usor),
+    background-color 160ms var(--usor),
+    border-color 160ms var(--usor);
+}
+button {
+  cursor: pointer;
+}
+:focus-visible {
+  outline: 2px solid var(--cerneala);
+  outline-offset: 2px;
+}
+s {
+  text-decoration-thickness: 1px;
+}
+
+.cadru {
+  width: 100%;
+  max-width: var(--cadru);
+  margin-inline: auto;
+  padding-inline: var(--margine);
+}
+main > section,
+main > .cadru > section {
+  margin-top: var(--ritm);
+}
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+.sari {
+  position: absolute;
+  left: 1rem;
+  top: -4rem;
+  z-index: 100;
+  padding: 0.6rem 1rem;
+  background: var(--cerneala);
+  color: #fff;
+  border-radius: var(--raza);
+}
+.sari:focus {
+  top: 1rem;
+}
+.anunt {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+}
+
+@media (max-width: 859px) {
+  .doar-lat {
+    display: none !important;
+  }
+}
+@media (min-width: 860px) {
+  .doar-mobil {
+    display: none !important;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+  *,
+  *::before,
+  *::after {
+    transition-duration: 0.01ms !important;
+    animation-duration: 0.01ms !important;
+  }
+}

@@ -1,0 +1,312 @@
+---
+import Cauta from './Cauta.tsx';
+import Marca from './Marca.astro';
+import { branduriCuLogo, categorii, dupaReducere, logoBrand, motive, produse, reducere, type Categorie, type Motiv } from '../data/catalog';
+import { lei, PRAG_LIVRARE_GRATUITA } from '../lib/format';
+
+interface Props {
+  simplu?: boolean;
+}
+const { simplu = false } = Astro.props;
+
+interface Legatura {
+  nume: string;
+  href: string;
+  numar?: number;
+}
+
+const dinCategorie = (c: Categorie) => produse.filter((p) => p.categorie === c);
+
+// Coloanele unui panou se construiesc din catalog, deci rămân corecte când se schimbă stocul.
+function panou(c: Categorie) {
+  const lista = dinCategorie(c);
+  const peMotiv = (Object.keys(motive) as Motiv[])
+    .map((m) => ({ nume: motive[m].nume, href: `/produse?cat=${c}&motiv=${m}`, numar: lista.filter((p) => p.motiv === m).length }))
+    .filter((l) => l.numar > 0);
+  const numarBrand = new Map<string, number>();
+  lista.forEach((p) => numarBrand.set(p.brand, (numarBrand.get(p.brand) ?? 0) + 1));
+  const peBrand: Legatura[] = [...numarBrand.entries()]
+    .sort((a, b) => b[1] - a[1] || a[0].localeCompare(b[0], 'ro'))
+    .slice(0, 7)
+    .map(([b]) => ({ nume: b, href: `/produse?cat=${c}&brand=${encodeURIComponent(b)}` }));
+  return { peMotiv, peBrand, vedeta: dupaReducere.find((p) => p.categorie === c)! };
+}
+
+const parfumuriPentru: Legatura[] = [
+  { nume: 'Parfumuri de damă', href: '/produse?cat=parfumuri&gen=dama' },
+  { nume: 'Parfumuri pentru bărbați', href: '/produse?cat=parfumuri&gen=barbati' },
+  { nume: 'Parfumuri arabești', href: '/produse?cat=parfumuri&sub=arabesc' },
+  { nume: 'Parfumuri de nișă', href: '/produse?cat=parfumuri&sub=nisa' },
+  { nume: 'Seturi cadou', href: '/produse?cat=seturi' },
+  { nume: 'Sub 200 lei', href: '/produse?cat=parfumuri&max=200' },
+];
+
+// Panoul mare de sub „Toate ofertele": categorii, etichete de outlet, branduri și două vedete.
+const pozaCategorie: Record<Categorie, string> = {
+  parfumuri: 'yves-saint-laurent-black-opium',
+  machiaj: 'dior-addict-lip-maximizer',
+  ten: 'estee-lauder-advanced-night-repair',
+  par: 'kerastase-elixir-ultime-l-huile-originale',
+  corp: 'nuxe-huile-prodigieuse-florale',
+  seturi: 'lancome-la-vie-est-belle-set',
+};
+const toateCategoriile = categorii.map((c) => ({ ...c, numar: dinCategorie(c.id).length, poza: pozaCategorie[c.id] }));
+const toateMotivele = (Object.keys(motive) as Motiv[]).map((m) => {
+  const r = produse.filter((p) => p.motiv === m).map(reducere);
+  return { id: m, nume: motive[m].nume, scurt: motive[m].scurt, maxim: Math.max(...r), numar: r.length };
+});
+const dupaPret: Legatura[] = [50, 100, 200].map((v) => ({ nume: `Sub ${v} lei`, href: `/produse?max=${v}`, numar: produse.filter((p) => p.pret <= v).length }));
+const populare: Legatura[] = [
+  { nume: 'Parfumuri de damă', href: '/produse?cat=parfumuri&gen=dama' },
+  { nume: 'Parfumuri pentru bărbați', href: '/produse?cat=parfumuri&gen=barbati' },
+  { nume: 'Parfumuri arabești', href: '/produse?cat=parfumuri&sub=arabesc' },
+  { nume: 'Parfumuri de nișă', href: '/produse?cat=parfumuri&sub=nisa' },
+  { nume: 'Cel mai bine notate', href: '/produse?sort=nota' },
+];
+const maxim = reducere(dupaReducere[0]);
+const testere = produse.filter((p) => p.motiv === 'tester');
+
+const cuPanou: Categorie[] = ['parfumuri', 'machiaj', 'ten', 'par', 'corp'];
+const meniu = cuPanou.map((id) => ({ ...categorii.find((c) => c.id === id)!, ...panou(id) }));
+---
+
+<div class="bara-sus">
+  <div class="cadru bara-sus-rand">
+    <p>Livrare gratuită la comenzi peste {PRAG_LIVRARE_GRATUITA} lei</p>
+    <p class="doar-lat">Produse originale, cu factură și lot verificabil</p>
+    <p class="doar-lat">
+      <a href="tel:+40312345678">031 234 56 78</a>, luni-vineri 9-17
+    </p>
+  </div>
+</div>
+
+<header class="antet">
+  <div class="antet-sus">
+    <div class={simplu ? 'cadru antet-rand antet-rand-simplu' : 'cadru antet-rand'}>
+      {
+        simplu ? (
+          <>
+            <a class="antet-marca" href="/" aria-label="Flacon Outlet, pagina principală"><Marca /></a>
+            <p class="antet-sigur">Comandă securizată</p>
+          </>
+        ) : (
+          <>
+            <a class="antet-marca" href="/" aria-label="Flacon Outlet, pagina principală"><Marca /></a>
+            <Cauta client:load />
+            <div class="antet-actiuni">
+              <a class="antet-buton doar-lat" href="/cont">
+                <svg viewBox="0 0 24 24" width="24" height="24" aria-hidden="true">
+                  <circle cx="12" cy="8.5" r="3.5" fill="none" stroke="currentColor" stroke-width="1.6" />
+                  <path d="M5 19.5c1-3.4 3.7-5 7-5s6 1.6 7 5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" />
+                </svg>
+                <span>Cont</span>
+              </a>
+              <a class="antet-buton doar-lat" href="/cont#favorite">
+                <svg viewBox="0 0 24 24" width="24" height="24" aria-hidden="true">
+                  <path d="M12 20s-7-4.4-7-9.6A3.9 3.9 0 0 1 12 8a3.9 3.9 0 0 1 7 2.4C19 15.6 12 20 12 20z" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round" />
+                </svg>
+                <span>Favorite</span>
+              </a>
+              <button type="button" class="antet-buton antet-cos" data-deschide-cos aria-label="Deschide coșul">
+                <span class="cos-icon">
+                  <svg viewBox="0 0 24 24" width="24" height="24" aria-hidden="true">
+                    <path d="M5 8h14l-1.2 11.2a1 1 0 0 1-1 .8H7.2a1 1 0 0 1-1-.8L5 8zm4 0V6.5a3 3 0 0 1 6 0V8" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round" />
+                  </svg>
+                  <span class="cos-numar" data-cos-numar hidden>0</span>
+                </span>
+                <span class="doar-lat">Coș</span>
+              </button>
+            </div>
+          </>
+        )
+      }
+    </div>
+  </div>
+
+  {
+    !simplu && (
+      <nav class="meniu" aria-label="Categorii">
+        <ul class="cadru meniu-lista">
+          <li class="meniu-cu-panou">
+            <a class="meniu-toate" href="/produse">
+              <svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true">
+                <path d="M4 7h16M4 12h16M4 17h16" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
+              </svg>
+              Toate ofertele
+            </a>
+            <div class="mega">
+              <div class="cadru mega-interior mega-toate">
+                <div class="mega-mare">
+                  <p class="mega-titlu">Categorii</p>
+                  <ul>
+                    {toateCategoriile.map((c) => (
+                      <li>
+                        <a href={`/produse?cat=${c.id}`}>
+                          {c.nume}
+                          <sup>{c.numar}</sup>
+                        </a>
+                      </li>
+                    ))}
+                  </ul>
+                  <a class="legatura" href="/produse">Vezi toate cele {produse.length} de oferte</a>
+                </div>
+
+                <div class="mega-coloana">
+                  <p class="mega-titlu">Outlet după etichetă</p>
+                  <ul>
+                    {toateMotivele.map((m) => (
+                      <li>
+                        <a href={`/produse?motiv=${m.id}`}>
+                          {m.nume}
+                          <b>-{m.maxim}%</b>
+                        </a>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+
+                <div class="mega-coloana">
+                  <p class="mega-titlu">După preț</p>
+                  <ul>
+                    {dupaPret.map((l) => (
+                      <li>
+                        <a href={l.href}>{l.nume}</a>
+                      </li>
+                    ))}
+                  </ul>
+                  <p class="mega-titlu">Căutate des</p>
+                  <ul>
+                    {populare.map((l) => (
+                      <li>
+                        <a href={l.href}>{l.nume}</a>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+
+                <a class="mega-afis mega-afis-foto" href="/produse">
+                  <img src="/hero-outlet-mic.webp" alt="" loading="lazy" />
+                  <span>
+                    <small>Outlet de toamnă</small>
+                    <strong>Până la -{maxim}%</strong>
+                    <em>Vezi ofertele</em>
+                  </span>
+                </a>
+                <a class="mega-afis mega-afis-testere" href="/produse?motiv=tester">
+                  <img src="/decupaj/dior-sauvage.webp" alt="" loading="lazy" />
+                  <span>
+                    <small>Testere de parfum</small>
+                    <strong>De la {lei(Math.min(...testere.map((p) => p.pret)))}</strong>
+                    <em>Vezi cele {testere.length} testere</em>
+                  </span>
+                </a>
+
+                <ul class="mega-logouri">
+                  {branduriCuLogo.slice(0, 11).map((b) => (
+                    <li>
+                      <a href={`/produse?brand=${encodeURIComponent(b)}`}>
+                        <img src={logoBrand(b)} alt={b} loading="lazy" />
+                      </a>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            </div>
+          </li>
+
+          {meniu.map((m) => (
+            <li class="meniu-cu-panou">
+              <a href={`/produse?cat=${m.id}`}>
+                {m.nume}
+                <svg class="meniu-sageata" viewBox="0 0 12 8" width="10" height="7" aria-hidden="true">
+                  <path d="M1 1l5 5 5-5" fill="none" stroke="currentColor" stroke-width="1.6" />
+                </svg>
+              </a>
+              <div class="mega">
+                <div class="cadru mega-interior mega-categorie">
+                  <div class="mega-coloana">
+                    <p class="mega-titlu">{m.id === 'parfumuri' ? 'Pentru cine' : m.nume}</p>
+                    <ul>
+                      {m.id === 'parfumuri' ? (
+                        parfumuriPentru.map((l) => (
+                          <li>
+                            <a href={l.href}>{l.nume}</a>
+                          </li>
+                        ))
+                      ) : (
+                        <>
+                          <li>
+                            <a href={`/produse?cat=${m.id}`}>Toate ofertele</a>
+                          </li>
+                          <li>
+                            <a href={`/produse?cat=${m.id}&max=50`}>Sub 50 lei</a>
+                          </li>
+                          <li>
+                            <a href={`/produse?cat=${m.id}&max=100`}>Sub 100 lei</a>
+                          </li>
+                          <li>
+                            <a href={`/produse?cat=${m.id}&sort=nota`}>Cel mai bine notate</a>
+                          </li>
+                        </>
+                      )}
+                    </ul>
+                  </div>
+                  <div class="mega-coloana">
+                    <p class="mega-titlu">De ce e redus</p>
+                    <ul>
+                      {m.peMotiv.map((l) => (
+                        <li>
+                          <a href={l.href}>
+                            {l.nume}
+                            <sup>{l.numar}</sup>
+                          </a>
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                  <div class="mega-coloana">
+                    <p class="mega-titlu">Branduri</p>
+                    <ul>
+                      {m.peBrand.map((l) => (
+                        <li>
+                          <a href={l.href}>{l.nume}</a>
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                  <a class="mega-produs" href={`/produs/${m.vedeta.id}`}>
+                    <span class="mega-produs-foto">
+                      <img src={`/produse/${m.vedeta.id}.webp`} alt="" width="640" height="640" loading="lazy" />
+                      <b class="steag steag-rosu">-{reducere(m.vedeta)}%</b>
+                    </span>
+                    <span class="mega-produs-text">
+                      <small>Cea mai mare reducere din {m.nume.toLowerCase()}</small>
+                      <strong>{m.vedeta.brand}</strong>
+                      {m.vedeta.nume}
+                      <em>
+                        {lei(m.vedeta.pret)} <s>{lei(m.vedeta.pretRaft)}</s>
+                      </em>
+                    </span>
+                  </a>
+                </div>
+              </div>
+            </li>
+          ))}
+
+          <li>
+            <a href="/produse?cat=seturi">Seturi cadou</a>
+          </li>
+          <li>
+            <a href="/produse?cat=parfumuri&sub=arabesc">Parfumuri arabești</a>
+          </li>
+          <li>
+            <a class="meniu-accent" href="/produse?motiv=tester">Testere</a>
+          </li>
+          <li>
+            <a class="meniu-accent" href="/produse?max=100">Sub 100 lei</a>
+          </li>
+        </ul>
+      </nav>
+    )
+  }
+</header>

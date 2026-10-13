@@ -1,0 +1,45 @@
+---
+// Cuvântul „flacon" plus o etichetă de preț agățată: singurul loc unde roșul e fundal.
+---
+
+<span class="marca">
+  <span class="marca-nume">flacon</span>
+  <span class="marca-eticheta">outlet</span>
+</span>
+
+<style>
+  .marca {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.45rem;
+    line-height: 1;
+  }
+  .marca-nume {
+    font-size: 1.7rem;
+    font-weight: 800;
+    letter-spacing: -0.045em;
+  }
+  .marca-eticheta {
+    position: relative;
+    padding: 0.32rem 0.5rem 0.34rem 0.95rem;
+    background: var(--rosu);
+    color: #fff;
+    font-size: 0.72rem;
+    font-weight: 800;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    clip-path: polygon(0.55rem 0, 100% 0, 100% 100%, 0.55rem 100%, 0 50%);
+  }
+  /* gaura de sfoară a etichetei */
+  .marca-eticheta::before {
+    content: '';
+    position: absolute;
+    left: 0.48rem;
+    top: 50%;
+    width: 0.24rem;
+    height: 0.24rem;
+    border-radius: 50%;
+    background: currentColor;
+    transform: translateY(-50%);
+  }
+</style>

@@ -1,0 +1,10 @@
+---
+import Baza from '../../layouts/Baza.astro';
+import Catalog from '../../components/Catalog.tsx';
+---
+
+<Baza titlu="Toate ofertele · Flacon Outlet">
+  <div class="cadru">
+    <Catalog client:load />
+  </div>
+</Baza>

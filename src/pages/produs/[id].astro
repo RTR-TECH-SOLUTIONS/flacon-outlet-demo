@@ -1,0 +1,230 @@
+---
+import Baza from '../../layouts/Baza.astro';
+import Rail from '../../components/Rail.astro';
+import { categorii, economie, logoBrand, genNume, motive, produse, reducere, subtitlu, titlu, type Produs } from '../../data/catalog';
+import { pretPeMl } from '../../components/CardProdus.tsx';
+import { lei, PRAG_LIVRARE_GRATUITA } from '../../lib/format';
+
+export function getStaticPaths() {
+  return produse.map((p) => ({ params: { id: p.id }, props: { p } }));
+}
+
+interface Props {
+  p: Produs;
+}
+const { p } = Astro.props;
+const motiv = motive[p.motiv];
+const categorie = categorii.find((c) => c.id === p.categorie)!;
+const putine = p.stoc <= 3;
+
+// Cod de lot stabil per produs, ca fișa să arate la fel la fiecare build.
+const suma = [...p.id].reduce((s, c) => (s * 31 + c.charCodeAt(0)) % 9000, 7);
+const lot = `${1000 + suma}${'ABCDEFGH'[suma % 8]}`;
+const luniFabricatie = ['noiembrie 2025', 'ianuarie 2026', 'martie 2026', 'mai 2026'];
+
+const stare: Record<Produs['motiv'], string> = {
+  tester: 'Flacon plin, nepulverizat. Cutie albă de tester.',
+  cutie: 'Produs nou, sigilat. Cutia are un defect vizibil.',
+  celofan: 'Produs nou, nefolosit. Fără folia exterioară.',
+  ambalaj: 'Produs nou, sigilat, în ambalajul anterior.',
+  termen: 'Produs nou, sigilat, aproape de data de expirare.',
+  ultimele: 'Produs nou, sigilat.',
+};
+
+// Două păreri de exemplu, legate de motivul reducerii.
+const pareri: Record<Produs['motiv'], { titlu: string; text: string; cine: string }[]> = {
+  tester: [
+    { titlu: 'Exact ce scria', text: 'A venit în cutie albă, cu capac. Miroase și ține la fel ca flaconul pe care îl aveam din parfumerie.', cine: 'Radu P., Brașov' },
+    { titlu: 'Lotul se verifică', text: 'Am trecut codul de pe fundul flaconului într-un verificator și a ieșit fabricat anul acesta.', cine: 'Mara D., Timișoara' },
+  ],
+  cutie: [
+    { titlu: 'Doar cutia', text: 'Colțul era turtit, ca în poza trimisă pe WhatsApp înainte. Flaconul era sigilat, fără nicio urmă.', cine: 'Ioana M., Cluj-Napoca' },
+    { titlu: 'Pentru mine, nu de cadou', text: 'Cutia o arunc oricum. La diferența asta de preț nu am stat pe gânduri.', cine: 'Alex V., București' },
+  ],
+  celofan: [
+    { titlu: 'Nefolosit', text: 'Lipsea doar folia. Pulverizatorul avea încă protecția de transport.', cine: 'Cristina B., Oradea' },
+    { titlu: 'Livrare rapidă', text: 'Comandat luni la prânz, ridicat marți din easybox.', cine: 'Paul S., Sibiu' },
+  ],
+  ambalaj: [
+    { titlu: 'Aceeași formulă', text: 'Cutia are grafica veche, produsul e identic cu cel de acum din magazine.', cine: 'Elena R., Constanța' },
+    { titlu: 'Merită', text: 'Am comparat lotul cu cel al flaconului meu vechi: aceeași fabrică, alt an.', cine: 'Dan C., Iași' },
+  ],
+  termen: [
+    { titlu: 'Data era scrisă clar', text: 'Expira în patru luni și scria asta pe pagină și pe factură. Îl termin în două.', cine: 'Andreea T., Iași' },
+    { titlu: 'Am luat două', text: 'La prețul ăsta am luat și pentru sora mea. Sigilate amândouă.', cine: 'Bianca N., Galați' },
+  ],
+  ultimele: [
+    { titlu: 'Am prins ultima', text: 'Mai era o singură bucată. A venit sigilată, cu celofan.', cine: 'Simona L., Arad' },
+    { titlu: 'Prompt', text: 'Mi-au confirmat stocul pe e-mail în zece minute și a plecat în aceeași zi.', cine: 'Vlad O., Ploiești' },
+  ],
+};
+
+const similare = produse
+  .filter((x) => x.id !== p.id && x.categorie === p.categorie && (p.gen ? x.gen === p.gen || x.sub === p.sub : true))
+  .sort((a, b) => Math.abs(a.pret - p.pret) - Math.abs(b.pret - p.pret))
+  .slice(0, 10);
+---
+
+<Baza titlu={`${titlu(p)}, ${subtitlu(p).toLowerCase()} · Flacon Outlet`}>
+  {
+    logoBrand(p.brand) && (
+      <a class="produs-banda-brand" href={`/produse?brand=${encodeURIComponent(p.brand)}`}>
+        <img src={logoBrand(p.brand)} alt={`Toate ofertele ${p.brand}`} />
+      </a>
+    )
+  }
+
+  <div class="cadru">
+    <div class="produs">
+      <div class="produs-foto">
+        <img src={`/produse/${p.id}.webp`} alt={`${titlu(p)}, ${subtitlu(p)}`} width="640" height="640" />
+        <span class="card-steaguri">
+          <b class="steag steag-rosu">-{reducere(p)}%</b>
+          <b class="steag">{motiv.nume}</b>
+        </span>
+        <button type="button" class="card-inima" data-favorit aria-pressed="false" aria-label="Adaugă la favorite">
+          <svg viewBox="0 0 24 24" width="24" height="24" aria-hidden="true"><path d="M12 20s-7-4.4-7-9.6A3.9 3.9 0 0 1 12 8a3.9 3.9 0 0 1 7 2.4C19 15.6 12 20 12 20z"></path></svg>
+        </button>
+      </div>
+
+      <div class="produs-info">
+        <nav class="firimituri" aria-label="Ești aici">
+          <a href="/">Acasă</a>
+          <a href={`/produse?cat=${p.categorie}`}>{categorie.nume}</a>
+          <a href={`/produse?brand=${encodeURIComponent(p.brand)}`}>{p.brand}</a>
+          <span aria-current="page">{p.nume}</span>
+        </nav>
+
+        <a class="produs-brand" href={`/produse?brand=${encodeURIComponent(p.brand)}`}>{p.brand}</a>
+        <h1>{p.nume}</h1>
+        <p class="produs-tip">{subtitlu(p)}</p>
+        <a class="card-nota produs-nota" href="#pareri" aria-label={`Nota ${p.nota.toFixed(1).replace('.', ',')} din 5, ${p.recenzii} păreri`}>
+          <span class="stele" aria-hidden="true">
+            <svg viewBox="0 0 100 20" width="80" height="16">{[0, 1, 2, 3, 4].map((i) => <path d="M10 1.6l2.6 5.3 5.8.8-4.2 4.1 1 5.8L10 14.9l-5.2 2.7 1-5.8L1.6 7.7l5.8-.8z" transform={`translate(${i * 20} 0)`} />)}</svg>
+            <svg viewBox="0 0 100 20" width="80" height="16" style={`clip-path: inset(0 ${100 - (p.nota / 5) * 100}% 0 0)`}>{[0, 1, 2, 3, 4].map((i) => <path d="M10 1.6l2.6 5.3 5.8.8-4.2 4.1 1 5.8L10 14.9l-5.2 2.7 1-5.8L1.6 7.7l5.8-.8z" transform={`translate(${i * 20} 0)`} />)}</svg>
+          </span>
+          <span>{p.nota.toFixed(1).replace('.', ',')}</span>
+          <span class="produs-nota-numar">{p.recenzii} păreri</span>
+        </a>
+
+        <div class="produs-pret">
+          <p class="produs-pret-rand">
+            <span class="pret-outlet">{lei(p.pret)}</span>
+            <s>{lei(p.pretRaft)}</s>
+            <b class="steag steag-rosu">-{reducere(p)}%</b>
+          </p>
+          <p class="produs-pret-mic">
+            {pretPeMl(p) && <>{(p.pret / p.ml!).toFixed(2).replace('.', ',')} lei / 1 ml · </>}TVA inclus · cel mai mic preț din ultimele 30 de zile: {lei(p.pret)}
+          </p>
+        </div>
+
+        <div class="produs-motiv">
+          <p class="produs-motiv-cap">
+            <span>De ce e redus</span>
+            <b class="steag">{motiv.nume}</b>
+          </p>
+          <p>
+            {motiv.detaliu}
+            {p.termen && <> Expiră în <strong>{p.termen}</strong>.</>}
+          </p>
+          <p class="produs-motiv-economie">Economisești {lei(economie(p))} față de prețul de raft.</p>
+        </div>
+
+        <div class="produs-cumpara">
+          <div class="cantitate" data-cantitate data-max={p.stoc}>
+            <button type="button" data-pas="-1" aria-label="Scade cantitatea">−</button>
+            <span aria-live="polite" data-valoare>1</span>
+            <button type="button" data-pas="1" aria-label="Crește cantitatea">+</button>
+          </div>
+          <button type="button" class="produs-adauga" data-adauga={p.id} data-stoc={p.stoc} data-cantitate="1">
+            Adaugă în coș
+          </button>
+        </div>
+
+        <ul class="produs-garantii">
+          <li>
+            <svg viewBox="0 0 32 32" aria-hidden="true"><path d="M5 16.5l7 7 15-15"></path></svg>
+            <span>
+              <strong class={putine ? 'stoc-putin' : ''}>
+                {putine ? (p.stoc === 1 ? 'Ultima bucată în stoc' : `Ultimele ${p.stoc} bucăți în stoc`) : `În stoc, ${p.stoc} bucăți`}
+              </strong>
+              Pleacă azi dacă comanzi până la ora 14.
+            </span>
+          </li>
+          <li>
+            <svg viewBox="0 0 32 32" aria-hidden="true"><path d="M3 8h15v13H3zM18 12h6l5 5v4H18zM9 24.5a2.5 2.5 0 1 0 0-5 2.5 2.5 0 0 0 0 5zM23 24.5a2.5 2.5 0 1 0 0-5 2.5 2.5 0 0 0 0 5z"></path></svg>
+            <span>
+              <strong>{p.pret >= PRAG_LIVRARE_GRATUITA ? 'Livrare gratuită' : 'Livrare de la 14,99 lei'}</strong>
+              {p.pret >= PRAG_LIVRARE_GRATUITA ? 'Ajunge în 24-48 de ore, prin curier sau la easybox.' : `Gratuită peste ${PRAG_LIVRARE_GRATUITA} lei. Ajunge în 24-48 de ore.`}
+            </span>
+          </li>
+          <li>
+            <svg viewBox="0 0 32 32" aria-hidden="true"><path d="M6 12h14a6 6 0 0 1 0 12h-8M6 12l5-5M6 12l5 5"></path></svg>
+            <span>
+              <strong>Retur în 14 zile</strong>
+              Pentru produsele sigilate. Plată cu cardul sau ramburs.
+            </span>
+          </li>
+        </ul>
+
+        <div class="produs-pliante">
+          <details open>
+            <summary>Detalii despre produs</summary>
+            <dl>
+              <div><dt>Brand</dt><dd>{p.brand}</dd></div>
+              <div><dt>Produs</dt><dd>{p.nume}</dd></div>
+              <div><dt>Tip</dt><dd>{p.tip}</dd></div>
+              {p.ml && <div><dt>Cantitate</dt><dd>{p.ml} ml</dd></div>}
+              {p.gen && <div><dt>Pentru</dt><dd>{genNume[p.gen]}</dd></div>}
+              <div><dt>Stare</dt><dd>{stare[p.motiv]}</dd></div>
+              <div><dt>Cod de lot</dt><dd>{lot}, fabricat în {luniFabricatie[suma % 4]}</dd></div>
+              {p.termen && <div><dt>Expiră</dt><dd>{p.termen}</dd></div>}
+              <div><dt>Proveniență</dt><dd>Distribuitor autorizat din Uniunea Europeană</dd></div>
+            </dl>
+          </details>
+          <details>
+            <summary>De ce e redus: {motiv.nume.toLowerCase()}</summary>
+            <p>{motiv.detaliu}</p>
+            <p>Produsul este original. Codul de lot de mai sus se poate verifica în orice verificator public de loturi cosmetice.</p>
+          </details>
+          <details>
+            <summary>Livrare și retur</summary>
+            <p>Livrăm prin Sameday (inclusiv easybox), FAN Courier și Cargus, în 24-48 de ore. Sub {PRAG_LIVRARE_GRATUITA} lei, livrarea costă 14,99 lei la easybox sau 19,99 lei la adresă.</p>
+            <p>Ai 14 zile să returnezi produsul, dacă este sigilat. Plata se face cu cardul sau ramburs la curier.</p>
+          </details>
+          <details id="pareri">
+            <summary>Păreri ({p.recenzii})</summary>
+            <ul class="produs-pareri">
+              {
+                pareri[p.motiv].map((r) => (
+                  <li>
+                    <strong>{r.titlu}</strong>
+                    <p>{r.text}</p>
+                    <small>{r.cine} · achiziție verificată</small>
+                  </li>
+                ))
+              }
+            </ul>
+          </details>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  {similare.length > 3 && <Rail titlu="S-ar putea să îți placă și asta" href={`/produse?cat=${p.categorie}`} produse={similare} />}
+</Baza>
+
+<script>
+  document.querySelectorAll<HTMLElement>('[data-cantitate]').forEach((cutie) => {
+    const valoare = cutie.querySelector<HTMLElement>('[data-valoare]')!;
+    const buton = cutie.parentElement!.querySelector<HTMLElement>('[data-adauga]')!;
+    const maxim = Number(cutie.dataset.max);
+    cutie.addEventListener('click', (e) => {
+      const pas = (e.target as HTMLElement).closest<HTMLElement>('[data-pas]');
+      if (!pas) return;
+      const nou = Math.min(maxim, Math.max(1, Number(valoare.textContent) + Number(pas.dataset.pas)));
+      valoare.textContent = String(nou);
+      buton.dataset.cantitate = String(nou);
+    });
+  });
+</script>
